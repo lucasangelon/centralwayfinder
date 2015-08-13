@@ -11,77 +11,39 @@
         layout="@layout/tool_bar">
 
     </include>
-
-    <TextView android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-        <!--Add the first line below to adjust the layout-->
-        android:layout_below="@+id/tool_bar"
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Copyright"
-        android:id="@+id/textView1"
-        android:typeface="monospace"
-        android:textColor="#050505"
-        android:singleLine="false"
-        android:textIsSelectable="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="COMMONWEALTH OF AUSTRALIA"
-        android:id="@+id/textView"
-        android:textSize="18dp"
-        android:textAlignment="center"
-        android:textColor="#050505"
+        android:id="@+id/textView2"
+        android:textSize="24dp"
+        android:layout_marginTop="34dp"
         android:layout_below="@+id/tool_bar"
         android:layout_centerHorizontal="true" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Copyright Regulations 1969"
-        android:id="@+id/textView3"
-        android:layout_below="@+id/textView"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="37dp"
-        android:textColor="#050505" />
 
-    <TextView
-        android:layout_width="wrap_content"
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="WARNING"
-        android:id="@+id/textView4"
-        android:layout_below="@+id/textView3"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp" />
+        android:layout_marginTop="120dp"
+        android:scrollbars="vertical"
+        android:fillViewport="true">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="This material has been copied and communicated to you by or on behalf of Central Institute of Technology pursuant to Part VB of the Copyright Act 1968 (The Act). The material in this communication may be subject to copyright under the Act. Any further copying or communication of this material by you may be the subject of copyright protection under the Act.  "
-        android:id="@+id/textView5"
-        android:textSize="15dp"
-        android:layout_below="@+id/textView4"
-        android:layout_alignLeft="@+id/textView6"
-        android:layout_alignStart="@+id/textView6"
-        android:layout_marginTop="30dp"
-        android:layout_alignRight="@+id/textView6"
-        android:layout_alignEnd="@+id/textView6"
-        android:textColor="#050505" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="DO NOT REMOVE THIS NOTICE  "
-        android:id="@+id/textView6"
-        android:layout_marginTop="52dp"
-        android:layout_below="@+id/textView5"
-        android:layout_centerHorizontal="true" />
+        <TextView
+            android:scrollbars = "vertical"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/copyright"
+            android:id="@+id/textView"
+            android:paddingTop="10dp"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:paddingBottom="10dp"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1.0" />
+    </ScrollView>
 
 </RelativeLayout>
