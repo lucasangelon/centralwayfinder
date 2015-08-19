@@ -1,13 +1,15 @@
 <resources>
     <string name="app_name">Central Wayfinder</string>
-    <string name="copyright"> A. General Information
+    <string name="copyright1"> A. General Information
 If the location services (GPS features) are turned on for your device, we collect that information in order to provide you with a route to your destination. In the case it is turned off, we require you to select a location as your starting point and do not collect any data from the device.
-B. Data Storage
+    </string>
+    <string name="copyright2"> B. Data Storage
 No data related to the user or the device is stored in our servers. The location data collected is used for the sole purpose of creating a route and is deleted afterwards.
 Central Institute of Technology uses third-party vendors and hosting partners to provide the necessary hardware, software, networking, storage and related technology required to run the Central Wayfinder software and the Website related to it.
-C. Changes
+    </string>
+    <string name="copyright3"> C. Changes
 Central Institute of Technology may update this policy at anytime. Any changes will be displayed on the Website for the Central Wayfinder software and the latest version is going to be available on both the mobile application and the website related to it.
-</string>
+    </string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
 </resources>
