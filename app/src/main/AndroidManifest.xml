@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="codefactory.centralwayfinder" >
 
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"> </uses-permission>
+    <uses-permission android:name="android.permission.INTERNET"> </uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"> </uses-permission>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -10,6 +14,10 @@
         <activity
             android:name=".SplashActivity"
             android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name=".GpsLocationActivity"
+            android:label="@string/title_activity_gps__location" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
