@@ -33,6 +33,7 @@
             android:label="@string/title_activity_room_detail" >
         </activity>
         <activity
+<<<<<<< HEAD
             android:name=".activities.IndoorMapActivity"
             android:label="@string/title_activity_indoor_map" >
         </activity>
@@ -49,6 +50,8 @@
             android:label="@string/title_activity_settings" >
         </activity>
 =======
+=======
+>>>>>>> parent of e94e139... Project Structure
             android:name=".GpsLocationActivity"
             android:label="@string/title_activity_gps__location" >
             <intent-filter>
