@@ -1,4 +1,4 @@
-package codefactory.centralwayfinder;
+package codefactory.centralwayfinder.activities;
 
 import android.content.Context;
 import android.location.Criteria;
@@ -10,6 +10,8 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import codefactory.centralwayfinder.R;
 
 
 public class GpsLocationActivity extends ActionBarActivity implements LocationListener {
