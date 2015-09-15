@@ -16,4 +16,11 @@
     <string name="Search">Search</string>
     <string name="User">User</string>
     <string name="title_activity_gps__location">GPS_Location</string>
+    <string name="title_activity_menu">MenuActivity</string>
+    <string name="title_activity_google_map">GoogleMapActivity</string>
+    <string name="title_activity_room_detail">RoomDetailActivity</string>
+    <string name="title_activity_indoor_map">IndoorMapActivity</string>
+    <string name="title_activity_services">ServicesActivity</string>
+    <string name="title_activity_first_use">FirstUseActivity</string>
+    <string name="title_activity_settings">SettingsActivity</string>
 </resources>
