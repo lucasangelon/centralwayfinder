@@ -1,24 +1,24 @@
-package codefactory.centralwayfinder.activities;
+package codefactory.centralwayfinder;
 
+import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import codefactory.centralwayfinder.R;
 
-/**
- * Created by Connie on 19/08/15.
- */
-public class CopyrightActivity extends AppCompatActivity {
+public class SplashActivity extends AppCompatActivity {/* When using Appcombat support library
+                                                         you need to extend Main Activity to
+                                                         ActionBarActivity.
+                                                      */
 
     private Toolbar toolbar;                              // Declaring the Toolbar Object
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_copyright);
+        setContentView(R.layout.activity_splash);
         toolbar = (Toolbar) findViewById(R.id.tool_bar); // Attaching the layout to the toolbar object
         setSupportActionBar(toolbar);                   // Setting toolbar as the ActionBar with setSupportActionBar() call
 
@@ -46,5 +46,4 @@ public class CopyrightActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
 }
