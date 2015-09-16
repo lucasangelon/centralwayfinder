@@ -1,34 +1,29 @@
-package codefactory.centralwayfinder;
+package codefactory.centralwayfinderproject.activites;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import codefactory.centralwayfinderproject.R;
 
-public class SplashActivity extends AppCompatActivity {/* When using Appcombat support library
-                                                         you need to extend Main Activity to
-                                                         ActionBarActivity.
-                                                      */
+public class CopyrightActivity extends ActionBarActivity {
 
-    private Toolbar toolbar;                              // Declaring the Toolbar Object
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splash);
-        toolbar = (Toolbar) findViewById(R.id.tool_bar); // Attaching the layout to the toolbar object
-        setSupportActionBar(toolbar);                   // Setting toolbar as the ActionBar with setSupportActionBar() call
-
-
+        setContentView(R.layout.activity_copyright);
+        toolbar = (Toolbar) findViewById(R.id.tool_bar);
+        setSupportActionBar(toolbar);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_splash, menu);
+        getMenuInflater().inflate(R.menu.menu_copyright, menu);
         return true;
     }
 
