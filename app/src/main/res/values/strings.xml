@@ -20,5 +20,7 @@
     <string name="title_activity_google_map">GoogleMapActivity</string>
     <string name="open_location_settings">Open Settings</string>
     <string name="cancel">Cancel</string>
-    <string name="open_network_settings">Open Setting</string>>
+    <string name="open_network_settings">Open Setting</string>
+    <string name="title_activity_menu">MenuActivity</string>
+    <string name="title_activity_select_campus">SelectCampusActivity</string>>
 </resources>
