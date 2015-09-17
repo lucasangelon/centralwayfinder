@@ -1,39 +1,61 @@
 package codefactory.centralwayfinderproject.activites;
 
-import android.support.v7.app.AppCompatActivity;
+import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.Toast;
 
 import codefactory.centralwayfinderproject.R;
 
-public class MenuActivity extends AppCompatActivity {
+public class MenuActivity extends Activity implements OnClickListener {
+
+    Button btn_button1, btn_button2, btn_button3, btn_button4;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
+
+        btn_button1 = (Button) findViewById(R.id.button1);
+        btn_button2 = (Button) findViewById(R.id.button2);
+        btn_button3 = (Button) findViewById(R.id.button3);
+        btn_button4 = (Button) findViewById(R.id.button4);
+
+        btn_button1.setOnClickListener(this);
+        btn_button2.setOnClickListener(this);
+        btn_button3.setOnClickListener(this);
+        btn_button4.setOnClickListener(this);
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_menu, menu);
-        return true;
-    }
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.button1:
+                //Go to Search Activity
+                Intent intent = new Intent(this, SelectCampusActivity.class);
+                startActivity(intent);
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+                break;
+            case R.id.button2:
+                Toast.makeText(getApplicationContext(), "Missing Implementation...",
+                        Toast.LENGTH_LONG).show();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+                break;
+            case R.id.button3:
+                Uri uri = Uri.parse("http://central.wa.edu.au/Pages/default.aspx"); // missing 'http://' will cause crash
+                intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
+
+                break;
+            case R.id.button4:
+
+                break;
+
         }
 
-        return super.onOptionsItemSelected(item);
     }
 }
