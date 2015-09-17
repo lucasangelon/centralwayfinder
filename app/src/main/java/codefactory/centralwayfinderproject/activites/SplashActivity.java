@@ -49,6 +49,20 @@ public class SplashActivity extends Activity implements OnClickListener {
         }
     }
 
+
+
+    @Override
+    public void onClick(View v) {
+
+        if(v.getId() == R.id.btnFirstClick){
+            //Go to Menu Activity
+            Intent intent = new Intent(this, MenuActivity.class);
+            startActivity(intent);
+        }
+
+    }
+
+
     /**
      *  No Network Connection
      *
@@ -86,6 +100,8 @@ public class SplashActivity extends Activity implements OnClickListener {
         AlertDialog alert = builder.create();
         alert.show();
     }
+
+
 
     /**
      * Checks for an internet Connection
@@ -140,6 +156,9 @@ public class SplashActivity extends Activity implements OnClickListener {
         alert.show();
     }
 
+
+
+
     /**
      * Checks for an GPS Connection
      * @return Boolean
@@ -148,20 +167,7 @@ public class SplashActivity extends Activity implements OnClickListener {
 
         // Get the location manager
         LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        boolean statusOfGPS = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
-
-        return statusOfGPS;
-
-    }
-
-    @Override
-    public void onClick(View v) {
-
-        if(v.getId() == R.id.btnFirstClick){
-                //Go to Menu Activity
-                Intent intent = new Intent(this, MenuActivity.class);
-                startActivity(intent);
-        }
+        return lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
 
     }
 
