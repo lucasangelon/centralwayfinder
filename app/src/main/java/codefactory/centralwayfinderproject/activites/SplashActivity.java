@@ -23,7 +23,10 @@ import org.ksoap2.serialization.SoapPrimitive;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 
+import java.util.ArrayList;
+
 import codefactory.centralwayfinderproject.R;
+import codefactory.centralwayfinderproject.models.Campus;
 
 public class SplashActivity extends Activity implements OnClickListener {
 
@@ -38,10 +41,20 @@ public class SplashActivity extends Activity implements OnClickListener {
     //also check db conn
     private final String SOAP_ACTION_CHECK_DB_CONN = "http://tempuri.org/WF_Service_Interface/checkDBConn";
     private final String METHOD_CHECK_DB_CONN = "checkDBConn";
+    //getCampus soap methods
+    private final String SOAP_ACTION_GET_CAMPUSES = "http://tempuri.org/WF_Service_Interface/SearchCampus";
+    private final String METHOD_GET_CAMPUSES = "SearchCampus";
 
+    //soap error checking vars (probably a better way of doing this)
     boolean checkServiceResult;
     boolean checkServiceExceptionCaught;
+    boolean checkDBResult;
+    boolean checkDBExceptionCaught;
+    boolean getCampusResult;
+    boolean getCampusExceptionCaught;
     String exceptionString;
+
+    ArrayList<Campus> campusList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,25 +66,44 @@ public class SplashActivity extends Activity implements OnClickListener {
         btn_startApp.setOnClickListener(this);
 
         //Checking Networking Connection
+
+        //problem: currently, IF there is no network connection a dialog comes up that allows the user to exit the program or open
+        //network settings, ELSE it checks the web service and retrieves campus data.
+        //however, if the user uses the dialog to go to network settings then returns to the activity without activating the network,
+        //the activity will not check again. even if i take the async task out of the if/else statement,
+        //the program will crash when it tries to send non-existent campus data to the next activity (or later it won't have any campus data to use).
+        //in java or something i'd use a while(!isOnline()) loop, but it turns out in android there are no (simple) 'blocking'
+        //activities available (so the loop runs continuously without actually waiting for/allowing the user to chg the settings).
+        //(assuming the intention is not to have an offline mode, though if i were a user i wouldnt be too happy about that - not my problem)
+        //solution 1: get campus data on/before creation of selectcampusactivity, with if (isOnline) as condition of menu button <- prolly best
+        //solution 2: have the dialog close the app with a message saying 'enable network and restart app' <- easiest
+        //solution 3: dick around with an async activity or something to keep checking for the network before advancing. <-pain in ass
+        //solution 4: bundle campus data and static maps with app, require network only for the bloody pathing/updates <- not likely
+        //(regarding solution 3 - answers in stackoverflow tend to be that its possible but better to
+        //adjust program flow to something like solution 1 or 2)
+
         if (!isOnline()) {
-            /*
-                Promt user to connect to network or exit application
-             */
+
+            //Prompt user to connect to network or exit application
             noNetworkConnectionDialog();
             Log.d("Not Online", "NOT CONNECTED TO THE INTERNET");
+        } else {
+            //check web service connection and retrieve campus list (if connection available)
+            AsyncCallWS checkServiceConnAST = new AsyncCallWS();
+            checkServiceConnAST.execute();
         }
+
 
         //Checking GPS Status
         if (!isGpsOn()) {
             /*
-                Promt user to connect to GPS status
+                Prompt user to connect to GPS status
              */
             noGpsConnectionDialog();
-            Log.d("Not GPS", "GPS IS OFF");
+            Log.d("No GPS", "GPS IS OFF");
         }
-
-        AsyncCallWSCheckServiceConn checkServiceConnAST = new AsyncCallWSCheckServiceConn();
-        checkServiceConnAST.execute();
+        Log.d("DEBUG", "ENABLING BUTTON");
+        btn_startApp.setEnabled(true);
 
     }
 
@@ -83,6 +115,7 @@ public class SplashActivity extends Activity implements OnClickListener {
         if(v.getId() == R.id.btnFirstClick){
             //Go to Menu Activity
             Intent intent = new Intent(this, MenuActivity.class);
+            intent.putExtra("campuses", campusList);
             startActivity(intent);
         }
 
@@ -98,13 +131,13 @@ public class SplashActivity extends Activity implements OnClickListener {
     private void noGpsConnectionDialog() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Please, Check Your Location Connection. \n If location is on the App works with more accuracy.")
-                .setTitle("No Location Connection")
+        builder.setMessage("Some features of this app will not be available without location services enabled")
+                .setTitle("LOCATION SERVICE DISABLED")
                 .setCancelable(false)
                 /*
                     Go to location settings
                  */
-                .setPositiveButton("Location Setting",
+                .setPositiveButton("Go to location settings",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
@@ -140,7 +173,7 @@ public class SplashActivity extends Activity implements OnClickListener {
 
         if(netInfo != null && netInfo.isConnectedOrConnecting()){
             return true;
-        }else return false;
+        } else return false;
 
     }
 
@@ -153,13 +186,13 @@ public class SplashActivity extends Activity implements OnClickListener {
     private void noNetworkConnectionDialog() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Please, Check Your Internet Connection")
-                .setTitle("No Network Connection")
+        builder.setMessage("This app requires an active network connection")
+                .setTitle("NETWORK ERROR")
                 .setCancelable(false)
                 /*
                     Go to network settings
                  */
-                .setPositiveButton("Network Setting",
+                .setPositiveButton("Go to network settings",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 Intent i = new Intent(Settings.ACTION_SETTINGS);
@@ -171,7 +204,7 @@ public class SplashActivity extends Activity implements OnClickListener {
                 /*
                     Exits app if user
                  */
-                .setNegativeButton("Exit",
+                .setNegativeButton("Exit App",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 SplashActivity.this.finish();
@@ -200,7 +233,7 @@ public class SplashActivity extends Activity implements OnClickListener {
 
 
     //check web service connection
-    private class AsyncCallWSCheckServiceConn extends AsyncTask<String, Void, Void> {
+    private class AsyncCallWS extends AsyncTask<String, Void, Void> {
 
         @Override
         protected void onPreExecute() {
@@ -209,7 +242,9 @@ public class SplashActivity extends Activity implements OnClickListener {
 
         @Override
         protected Void doInBackground(String... params) {
-            checkServiceConn();
+            if (checkServiceConn()){
+                getCampuses();
+            }
             return null;
         }
 
@@ -217,8 +252,9 @@ public class SplashActivity extends Activity implements OnClickListener {
         @Override
         protected void onPostExecute(Void result) {
             if (!checkServiceResult){
-                Toast.makeText(SplashActivity.this, "Error Connecting to web service", Toast.LENGTH_SHORT).show();
+                Toast.makeText(SplashActivity.this, "Error Connecting to web service\nOnline content may not be available", Toast.LENGTH_SHORT).show();
             }
+
         }
 
 
@@ -227,7 +263,7 @@ public class SplashActivity extends Activity implements OnClickListener {
 
         }
 
-        public void checkServiceConn() {
+        public boolean checkServiceConn() {
 
             //theres probably a better way to pass around results but these global bools work ftm
             //i think rather than using public global vars i should create an interface
@@ -262,6 +298,71 @@ public class SplashActivity extends Activity implements OnClickListener {
                 checkServiceResult = false;
                 checkServiceExceptionCaught = true;
                 Log.d("Soap action getDBconn:", "FAIL");
+                exceptionString = e.toString();
+            }
+
+            return checkServiceResult;
+
+        }
+
+        public void getCampuses() {
+
+            getCampusResult = false;
+            getCampusExceptionCaught = false;
+            campusList = new ArrayList<>();
+            //Create request
+            SoapObject request = new SoapObject(NAMESPACE, METHOD_GET_CAMPUSES);
+            //Create envelope
+            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
+                    SoapEnvelope.VER11);
+            envelope.dotNet = true;
+            //Set output SOAP object
+            envelope.setOutputSoapObject(request);
+            //Create HTTP call object
+            HttpTransportSE androidHttpTransport = new HttpTransportSE(URL);
+
+            try {
+                //Invoke web service
+                androidHttpTransport.call(SOAP_ACTION_GET_CAMPUSES, envelope);
+                //Get the response
+                SoapObject response = (SoapObject) envelope.bodyIn;
+                //get the array of campus objects
+                SoapObject responseTierOne = (SoapObject) response.getProperty(0);
+                //for each object in that array
+
+                for (int i = 0; i<responseTierOne.getPropertyCount(); i++){
+                    //parse into a soapobject
+                    SoapObject responseTierTwo = (SoapObject)responseTierOne.getProperty(i);
+                    Campus campus = new Campus();
+
+                    //and pull out the fields
+                    //... fsr field names aren't working - i'll look into that
+
+                    campus.campusID = responseTierTwo.getPropertyAsString(0);
+                    campus.campusName = responseTierTwo.getPropertyAsString(3);
+                    campus.campusLong = Double.parseDouble(responseTierTwo.getProperty(2).toString()); //casting (Double) didnt work
+                    campus.campusLat = Double.parseDouble(responseTierTwo.getProperty(1).toString());
+                    campus.campusZoom = Double.parseDouble(responseTierTwo.getProperty(4).toString());
+
+                    //campus.campusID = responseTierTwo.getProperty("campusID").toString(); //not sure if theres a dif btween this
+                    //campus.campusID = responseTierTwo.getPropertyAsString("campusID");    //and this
+                    //campus.campusName = responseTierTwo.getPropertyAsString("campusName");
+                    //campus.campusLong = Double.parseDouble(responseTierTwo.getProperty("campusLong")); //try casting .. doesnt work, have to parse
+                    //campus.campusLat = Double.parseDouble(responseTierTwo.getProperty("campusLat"));
+                    //campus.campusZoom = Double.parseDouble(responseTierTwo.getProperty("campusZoom"));
+
+                    //add to local list
+                    campusList.add(campus);
+                }
+
+                getCampusResult = true;
+                Log.d("Soap act. getCampuses:", "SUCCESS");
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                getCampusResult = false;
+                getCampusExceptionCaught = true;
+                Log.d("Soap act. getCampuses:", "FAIL");
                 exceptionString = e.toString();
             }
 

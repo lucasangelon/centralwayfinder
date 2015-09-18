@@ -13,5 +13,6 @@ android:clickable="true">
     android:id="@+id/btnFirstClick"
     android:layout_alignParentBottom="true"
     android:layout_centerHorizontal="true"
-    android:text="Start" />
+    android:text="Start"
+    android:enabled="false" />
 </RelativeLayout>

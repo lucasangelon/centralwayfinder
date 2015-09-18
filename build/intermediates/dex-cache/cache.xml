@@ -2,39 +2,39 @@
 <items version="2" >
 
     <item
-        jar="C:\Users\040107741\Desktop\GitHub\centralwayfinder\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.0.0\jars\classes.jar"
+        jar="C:\github\wayfinder\centralwayfinder\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.0.0\jars\classes.jar"
         jumboMode="false"
         revision="23.0.0"
         sha1="8413c27b45b7fe61dca4a98159f65e2cee215f5a">
-        <dex dex="C:\Users\040107741\Desktop\GitHub\centralwayfinder\app\build\intermediates\pre-dexed\debug\classes-26e587c3e8a3656e39ba6754617b22a77bd9bd1a.jar" />
+        <dex dex="C:\github\wayfinder\centralwayfinder\app\build\intermediates\pre-dexed\debug\classes-8b88ea8944fbff4546435946f05289ee0296fc2a.jar" />
     </item>
     <item
-        jar="C:\Users\040107741\Desktop\GitHub\centralwayfinder\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\23.0.0\jars\classes.jar"
-        jumboMode="false"
-        revision="23.0.0"
-        sha1="4fcf0b1879f8caf497c073e1432d398e9e2988c1">
-        <dex dex="C:\Users\040107741\Desktop\GitHub\centralwayfinder\app\build\intermediates\pre-dexed\debug\classes-29dc85ec6da9c5ba6b398ac0be778353a20e24af.jar" />
-    </item>
-    <item
-        jar="C:\Users\040107741\Desktop\GitHub\centralwayfinder\app\libs\ksoap2-android-assembly-3.4.0-jar-with-dependencies.jar"
-        jumboMode="false"
-        revision="23.0.0"
-        sha1="45fbaab416fb5cff992e662d1f7a83786f084fc3">
-        <dex dex="C:\Users\040107741\Desktop\GitHub\centralwayfinder\app\build\intermediates\pre-dexed\debug\ksoap2-android-assembly-3.4.0-jar-with-dependencies-7ca60e5d81ac7b31f243df649b346dd9e4cd8b9b.jar" />
-    </item>
-    <item
-        jar="C:\Users\040107741\Desktop\GitHub\centralwayfinder\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.0.0\jars\libs\internal_impl-23.0.0.jar"
-        jumboMode="false"
-        revision="23.0.0"
-        sha1="8bd336eeae661e8311330284897ee07f8ebaa297">
-        <dex dex="C:\Users\040107741\Desktop\GitHub\centralwayfinder\app\build\intermediates\pre-dexed\debug\internal_impl-23.0.0-8108398f6b95c889fb37e90040c57043bb799e00.jar" />
-    </item>
-    <item
-        jar="C:\Android\extras\android\m2repository\com\android\support\support-annotations\23.0.0\support-annotations-23.0.0.jar"
+        jar="C:\Users\Chuck\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\23.0.0\support-annotations-23.0.0.jar"
         jumboMode="false"
         revision="23.0.0"
         sha1="990e7f98a7bad86a40b1f0bcfeb039023afd0839">
-        <dex dex="C:\Users\040107741\Desktop\GitHub\centralwayfinder\app\build\intermediates\pre-dexed\debug\support-annotations-23.0.0-58e76bb1602abc25a779f7077cad40ba59f6fd1c.jar" />
+        <dex dex="C:\github\wayfinder\centralwayfinder\app\build\intermediates\pre-dexed\debug\support-annotations-23.0.0-d577a2d3f0279ae7f528f3251ef564fd7860561b.jar" />
+    </item>
+    <item
+        jar="C:\github\wayfinder\centralwayfinder\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\23.0.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.0"
+        sha1="4fcf0b1879f8caf497c073e1432d398e9e2988c1">
+        <dex dex="C:\github\wayfinder\centralwayfinder\app\build\intermediates\pre-dexed\debug\classes-8c155585a5324ddf7ddcb75fb1ccab4b37521dc5.jar" />
+    </item>
+    <item
+        jar="C:\github\wayfinder\centralwayfinder\app\libs\ksoap2-android-assembly-3.4.0-jar-with-dependencies.jar"
+        jumboMode="false"
+        revision="23.0.0"
+        sha1="45fbaab416fb5cff992e662d1f7a83786f084fc3">
+        <dex dex="C:\github\wayfinder\centralwayfinder\app\build\intermediates\pre-dexed\debug\ksoap2-android-assembly-3.4.0-jar-with-dependencies-535424771568519ca3114b37516a3c3e18cc1e48.jar" />
+    </item>
+    <item
+        jar="C:\github\wayfinder\centralwayfinder\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.0.0\jars\libs\internal_impl-23.0.0.jar"
+        jumboMode="false"
+        revision="23.0.0"
+        sha1="8bd336eeae661e8311330284897ee07f8ebaa297">
+        <dex dex="C:\github\wayfinder\centralwayfinder\app\build\intermediates\pre-dexed\debug\internal_impl-23.0.0-c7dfe7a6f170011060b5af5b20fa4684e9dfc155.jar" />
     </item>
 
 </items>

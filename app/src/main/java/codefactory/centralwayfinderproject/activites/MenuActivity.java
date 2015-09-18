@@ -4,15 +4,29 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
+
+import java.util.ArrayList;
 
 import codefactory.centralwayfinderproject.R;
+import codefactory.centralwayfinderproject.models.Campus;
 
 public class MenuActivity extends AppCompatActivity {
+
+    ArrayList<Campus> campusList;
+    TextView tempTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
+        //retrieve campus list from intent
+        campusList = (ArrayList<Campus>)getIntent().getSerializableExtra("campuses");
+        //debug
+        tempTextView = (TextView)findViewById(R.id.tempTextView);
+        if (campusList.size()>0) tempTextView.setText("Found "+String.valueOf(campusList.size())+ " campuses!");
     }
 
     @Override
