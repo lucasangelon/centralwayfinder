@@ -67,20 +67,6 @@ public class SplashActivity extends Activity implements OnClickListener {
 
         //Checking Networking Connection
 
-        //problem: currently, IF there is no network connection a dialog comes up that allows the user to exit the program or open
-        //network settings, ELSE it checks the web service and retrieves campus data.
-        //however, if the user uses the dialog to go to network settings then returns to the activity without activating the network,
-        //the activity will not check again. even if i take the async task out of the if/else statement,
-        //the program will crash when it tries to send non-existent campus data to the next activity (or later it won't have any campus data to use).
-        //in java or something i'd use a while(!isOnline()) loop, but it turns out in android there are no (simple) 'blocking'
-        //activities available (so the loop runs continuously without actually waiting for/allowing the user to chg the settings).
-        //(assuming the intention is not to have an offline mode, though if i were a user i wouldnt be too happy about that - not my problem)
-        //solution 1: get campus data on/before creation of selectcampusactivity, with if (isOnline) as condition of menu button <- prolly best
-        //solution 2: have the dialog close the app with a message saying 'enable network and restart app' <- easiest
-        //solution 3: dick around with an async activity or something to keep checking for the network before advancing. <-pain in ass
-        //solution 4: bundle campus data and static maps with app, require network only for the bloody pathing/updates <- not likely
-        //(regarding solution 3 - answers in stackoverflow tend to be that its possible but better to
-        //adjust program flow to something like solution 1 or 2)
 
         if (!isOnline()) {
 
@@ -186,7 +172,7 @@ public class SplashActivity extends Activity implements OnClickListener {
     private void noNetworkConnectionDialog() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("This app requires an active network connection")
+        builder.setMessage("This app requires an active network connection, please activate network and restart app")
                 .setTitle("NETWORK ERROR")
                 .setCancelable(false)
                 /*
