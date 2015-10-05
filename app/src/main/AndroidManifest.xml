@@ -42,6 +42,10 @@
             android:name=".activites.SelectCampusActivity"
             android:label="@string/title_activity_select_campus" >
         </activity>
+        <activity
+            android:name=".activites.MainLocations"
+            android:label="@string/title_activity_main_locations" >
+        </activity>
     </application>
 
 </manifest>
