@@ -2,32 +2,32 @@
 <items version="2" >
 
     <item
-        jar="D:\GitHub\centralwayfinder\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.0.0\jars\classes.jar"
+        jar="G:\TAFE\2015\Semester 2\WayFinder\centralwayfinder\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.0.0\jars\classes.jar"
         jumboMode="false"
         revision="23.0.0"
         sha1="8413c27b45b7fe61dca4a98159f65e2cee215f5a">
-        <dex dex="D:\GitHub\centralwayfinder\app\build\intermediates\pre-dexed\debug\classes-f6ec1f5dc614fe9c981b51f67384bc21b28dd8bb.jar" />
+        <dex dex="G:\TAFE\2015\Semester 2\WayFinder\centralwayfinder\app\build\intermediates\pre-dexed\debug\classes-5a79aee193405572cb9f41bc81606514a312c838.jar" />
     </item>
     <item
-        jar="C:\Users\Gustavo\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\23.0.0\support-annotations-23.0.0.jar"
-        jumboMode="false"
-        revision="23.0.0"
-        sha1="990e7f98a7bad86a40b1f0bcfeb039023afd0839">
-        <dex dex="D:\GitHub\centralwayfinder\app\build\intermediates\pre-dexed\debug\support-annotations-23.0.0-5e92eaa581cd4a28ae915fc3d76977031bc8699e.jar" />
-    </item>
-    <item
-        jar="D:\GitHub\centralwayfinder\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.0.0\jars\libs\internal_impl-23.0.0.jar"
+        jar="G:\TAFE\2015\Semester 2\WayFinder\centralwayfinder\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.0.0\jars\libs\internal_impl-23.0.0.jar"
         jumboMode="false"
         revision="23.0.0"
         sha1="8bd336eeae661e8311330284897ee07f8ebaa297">
-        <dex dex="D:\GitHub\centralwayfinder\app\build\intermediates\pre-dexed\debug\internal_impl-23.0.0-4343d07ccf293bfbbf8e3c0a4a059f9117a8da04.jar" />
+        <dex dex="G:\TAFE\2015\Semester 2\WayFinder\centralwayfinder\app\build\intermediates\pre-dexed\debug\internal_impl-23.0.0-d51279f4a550118b21117cf460c8bdf5b6ac8c38.jar" />
     </item>
     <item
-        jar="D:\GitHub\centralwayfinder\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\23.0.0\jars\classes.jar"
+        jar="C:\Users\Dillon\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\23.0.0\support-annotations-23.0.0.jar"
+        jumboMode="false"
+        revision="23.0.0"
+        sha1="990e7f98a7bad86a40b1f0bcfeb039023afd0839">
+        <dex dex="G:\TAFE\2015\Semester 2\WayFinder\centralwayfinder\app\build\intermediates\pre-dexed\debug\support-annotations-23.0.0-265e4371eaffb3d1ad939e4fcd89f64064553fe9.jar" />
+    </item>
+    <item
+        jar="G:\TAFE\2015\Semester 2\WayFinder\centralwayfinder\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\23.0.0\jars\classes.jar"
         jumboMode="false"
         revision="23.0.0"
         sha1="4fcf0b1879f8caf497c073e1432d398e9e2988c1">
-        <dex dex="D:\GitHub\centralwayfinder\app\build\intermediates\pre-dexed\debug\classes-fb530558da7b274d66f700987490e6e5332dc85e.jar" />
+        <dex dex="G:\TAFE\2015\Semester 2\WayFinder\centralwayfinder\app\build\intermediates\pre-dexed\debug\classes-068a78d1e5a68eefdf76df075e57b5d030ee091e.jar" />
     </item>
 
 </items>
