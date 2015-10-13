@@ -29,6 +29,7 @@ import java.util.List;
 import codefactory.centralwayfinderproject.R;
 import codefactory.centralwayfinderproject.helpers.HttpConnection;
 import codefactory.centralwayfinderproject.helpers.PathJSONParser;
+import codefactory.centralwayfinderproject.helpers.Useful;
 
 /**
  * Created by Gustavo on 21/09/2015.
@@ -39,6 +40,7 @@ public class GoogleMapActivity extends FragmentActivity {
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private Double startLatitude;
     private Double startLongitude;
+    private Useful util = new Useful();
     private final static String MODE_DRIVING = "driving";
     private final static String MODE_WALKING = "walking";
 
@@ -47,16 +49,21 @@ public class GoogleMapActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_google_map);
 
-        //Loading intent extras
-        Bundle bundle = getIntent().getExtras();
+        /*
+        * Check if the gps is ON or OFF start location
+        * In case ON: Use current location as start point
+        * In case OFF: Use campus start point as start point
+        */
+        if (util.isGpsOn()) {
+            //Get current location
+            startLatitude = util.getUserLocation().getLatitude();
+            startLongitude = util.getUserLocation().getLongitude();
 
-        if(bundle == null){
+
+        } else {
             //Set campus default location
             startLatitude = -31.953524;
             startLongitude = 115.860801;
-        }else  {
-            startLatitude = bundle.getDouble("startLatitude");
-            startLongitude = bundle.getDouble("startLongitude");
         }
 
         startLocation = new LatLng(startLatitude, startLongitude);

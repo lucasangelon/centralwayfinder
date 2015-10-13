@@ -36,7 +36,7 @@ public class MenuActivity extends Activity implements OnClickListener {
         switch (v.getId()) {
             case R.id.button1:
                 //Go to Search Activity
-                Intent intent = new Intent(this, SelectCampusActivity.class);
+                Intent intent = new Intent(this, GoogleMapActivity.class);
                 startActivity(intent);
 
                 break;
