@@ -41,8 +41,8 @@ public class MenuActivity extends Activity implements OnClickListener {
 
                 break;
             case R.id.button2:
-                Toast.makeText(getApplicationContext(), "Missing Implementation...",
-                        Toast.LENGTH_LONG).show();
+                intent = new Intent(this, BuildingViewActivity.class);
+                startActivity(intent);
 
                 break;
             case R.id.button3:
@@ -52,7 +52,8 @@ public class MenuActivity extends Activity implements OnClickListener {
 
                 break;
             case R.id.button4:
-
+                Toast.makeText(getApplicationContext(), "Missing Implementation...",
+                        Toast.LENGTH_LONG).show();
                 break;
 
         }

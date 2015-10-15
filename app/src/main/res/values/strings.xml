@@ -18,6 +18,7 @@
     <string name="Search">Search</string>
     <string name="User">User</string>
     <string name="title_activity_google_map">GoogleMapActivity</string>
+    <string name="title_activity_buildingview">BuildingViewActivity</string>
     <string name="open_location_settings">Open Settings</string>
     <string name="cancel">Cancel</string>
     <string name="open_network_settings">Open Setting</string>
