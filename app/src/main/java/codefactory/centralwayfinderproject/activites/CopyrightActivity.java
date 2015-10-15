@@ -23,6 +23,7 @@ public class CopyrightActivity extends ActionBarActivity {
 
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
+
     }
 
     @Override
