@@ -5,12 +5,16 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="codefactory.centralwayfinderproject.activites.CopyrightActivity">
-    <!-- Add toolbar on this page-->
-    <include
-        android:id="@+id/tool_bar"
-        layout="@layout/tool_bar">
 
-    </include>
+    <!-- This is where we add our custom toolbar to the pages-->
+    <codefactory.centralwayfinderproject.helpers.MyCustomToolbar
+        android:id="@+id/tool_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#fff38903">
+    </codefactory.centralwayfinderproject.helpers.MyCustomToolbar>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -27,9 +31,10 @@
         android:id="@+id/scrollView"
         android:layout_width="fill_parent"
         android:layout_marginTop="135dp"
-
         android:layout_height="350dp"
-        android:visibility="visible">
+        android:visibility="visible"
+        android:layout_above="@+id/tool_bar">
+
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -41,20 +46,28 @@
 
             <TextView
                 android:layout_width="fill_parent"
-                android:layout_height="105dp"
-                android:text="@string/copyright1"
-                android:id="@+id/textView1" />
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="138dp"
+                android:layout_height="188dp"
                 android:text="@string/copyright2"
                 android:id="@+id/textView2" />
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="125dp"
-                android:text="@string/copyright3"
-                android:id="@+id/textView3"/>
         </LinearLayout>
     </ScrollView>
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="105dp"
+        android:text="@string/copyright1"
+        android:id="@+id/textView1"
+        android:layout_alignParentTop="true"
+        android:layout_alignRight="@+id/scrollView"
+        android:layout_alignEnd="@+id/scrollView" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="125dp"
+        android:text="@string/copyright3"
+        android:id="@+id/textView3"
+        android:layout_alignBottom="@+id/scrollView"
+        android:layout_alignRight="@+id/scrollView"
+        android:layout_alignEnd="@+id/scrollView" />
 
 </RelativeLayout>

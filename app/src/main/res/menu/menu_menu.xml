@@ -1,7 +1,29 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="codefactory.centralwayfinderproject.activites.MenuActivity">
-    <item android:id="@+id/action_settings" android:title="@string/action_settings"
-        android:orderInCategory="100" app:showAsAction="never" />
+    tools:context=".MenuActivity">
+    <item
+        android:id="@+id/action_icon1"
+        android:orderInCategory="1"
+        android:title="MenuActivity"
+        android:icon="@mipmap/ic_home"
+        app:showAsAction="always"></item>
+    <item
+        android:id="@+id/action_icon2"
+        android:orderInCategory="2"
+        android:title="Search1"
+        android:icon="@mipmap/ic_home"
+        app:showAsAction="always"></item>
+    <item
+        android:id="@+id/action_icon3"
+        android:orderInCategory="3"
+        android:title="CentralWebsite"
+        android:icon="@mipmap/ic_home"
+        app:showAsAction="always"></item>
+    <item
+        android:id="@+id/action_icon4"
+        android:orderInCategory="4"
+        android:title="Search2"
+        android:icon="@mipmap/ic_home"
+        app:showAsAction="always"></item>
 </menu>
