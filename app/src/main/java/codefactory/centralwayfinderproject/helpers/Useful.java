@@ -1,8 +1,7 @@
 package codefactory.centralwayfinderproject.helpers;
 
-import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
-import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 
@@ -11,11 +10,18 @@ import android.location.LocationManager;
  *
  * Useful class is responsible to handle all method which it will be using multiple times when the app is running.
  */
-public class Useful extends Activity {
+public class Useful extends Application {
 
-    private LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-    private Location location;
-    String provider;
+    private LocationManager locationManager;
+    Context mContext;
+
+    /**
+     * Default construction
+     */
+    public Useful(Context mContext) {
+        this.mContext = mContext;
+        this.locationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
+    }
 
     /**
      * Checks for an GPS Connection
@@ -29,9 +35,8 @@ public class Useful extends Activity {
     @SuppressWarnings("ResourceType")
     public Location getUserLocation() {
 
-        Criteria criteria = new Criteria();
-        provider = locationManager.getBestProvider(criteria, false);
-        location = locationManager.getLastKnownLocation(provider);
+        String provider = locationManager.NETWORK_PROVIDER;
+        Location location = locationManager.getLastKnownLocation(provider);
 
         return location;
     }

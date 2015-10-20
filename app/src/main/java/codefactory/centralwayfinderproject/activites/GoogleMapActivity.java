@@ -40,25 +40,27 @@ public class GoogleMapActivity extends FragmentActivity {
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private Double startLatitude;
     private Double startLongitude;
-    private Useful util = new Useful();
+    private Useful util;
     private final static String MODE_DRIVING = "driving";
     private final static String MODE_WALKING = "walking";
 
     @Override
+    @SuppressWarnings("ResourceType")
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_google_map);
 
         /*
-        * Check if the gps is ON or OFF start location
+        * Check if the gps is ON or OFF
         * In case ON: Use current location as start point
         * In case OFF: Use campus start point as start point
         */
-        if (util.isGpsOn()) {
+        util = new Useful(this);
+
+        if(util.isGpsOn()) {
             //Get current location
             startLatitude = util.getUserLocation().getLatitude();
             startLongitude = util.getUserLocation().getLongitude();
-
 
         } else {
             //Set campus default location
