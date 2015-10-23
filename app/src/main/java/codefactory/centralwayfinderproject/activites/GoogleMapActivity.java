@@ -1,100 +1,248 @@
 package codefactory.centralwayfinderproject.activites;
 
-import android.support.v7.app.ActionBarActivity;
+import android.graphics.Color;
+import android.location.Address;
+import android.location.Geocoder;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.support.v4.app.FragmentActivity;
+import android.util.Log;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
 
-/*
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-*/
+import com.google.android.gms.maps.model.PolylineOptions;
 
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import codefactory.centralwayfinderproject.R;
+import codefactory.centralwayfinderproject.helpers.HttpConnection;
+import codefactory.centralwayfinderproject.helpers.PathJSONParser;
+import codefactory.centralwayfinderproject.helpers.Useful;
 
-public class GoogleMapActivity extends ActionBarActivity {
+/**
+ * Created by Gustavo on 21/09/2015.
+ */
+public class GoogleMapActivity extends FragmentActivity {
 
-    /*
+    private LatLng startLocation, endLocation;
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
-    */
+    private Double startLatitude;
+    private Double startLongitude;
+    private Useful util;
+    private final static String MODE_DRIVING = "driving";
+    private final static String MODE_WALKING = "walking";
 
     @Override
+    @SuppressWarnings("ResourceType")
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_google_map);
 
         /*
-        setUpMapIfNeeded();
+        * Check if the gps is ON or OFF
+        * In case ON: Use current location as start point
+        * In case OFF: Use campus start point as start point
         */
-    }
+        util = new Useful(this);
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_google_map, menu);
-        return true;
-    }
+        if(util.isGpsOn()) {
+            //Get current location
+            startLatitude = util.getUserLocation().getLatitude();
+            startLongitude = util.getUserLocation().getLongitude();
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        } else {
+            //Set campus default location
+            startLatitude = -31.953524;
+            startLongitude = 115.860801;
         }
 
-        return super.onOptionsItemSelected(item);
+        startLocation = new LatLng(startLatitude, startLongitude);
+        setUpMapIfNeeded();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setUpMapIfNeeded();
+    }
+
+    private void setUpMapIfNeeded() {
+        // Do a null check to confirm that we have not already instantiated the map.
+        if (mMap == null) {
+            // Try to obtain the map from the SupportMapFragment.
+            mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
+                    .getMap();
+            // Check if we were successful in obtaining the map.
+            if (mMap != null) {
+                setUpMap();
+            }
+        }
+    }
+
+    /**
+     * This is where we draw the map for the first time
+     * This should only be called once
+     */
+    private void setUpMap() {
+
+        mMap.addMarker(new MarkerOptions().position(startLocation).title("Start Point"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(startLocation, 15));
+        mMap.setMyLocationEnabled(false);
+    }
+
+    /**
+     * Method to search destination place input
+     */
+    public void onSearch(View v) {
+
+        EditText userDestination = (EditText) findViewById(R.id.txtAddress);
+        String destination = userDestination.getText().toString();
+        List<Address> addressList = null;
+
+        //Check if destination is null or empty
+        if (destination != null || !destination.equals("")) {
+            Geocoder geocoder = new Geocoder(this);
+            try {
+                //Using Geocoder's object to transform string in geolocation
+                addressList = geocoder.getFromLocationName(destination, 1);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            //Saving the new geolocation on the location object
+            Address address = addressList.get(0);
+            endLocation = new LatLng(address.getLatitude(), address.getLongitude());
+
+            //Search for the route
+            String url = getMapsApiDirectionsUrl(startLocation, endLocation, MODE_DRIVING);
+            ReadTask downloadTask = new ReadTask();
+            downloadTask.execute(url);
+
+            //Re-call the map with the new location
+            customAddMarker(endLocation, destination, destination);
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(endLocation, 15));
+            mMap.setMyLocationEnabled(false);
+
+            /// Teste
+            mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+
+                @Override
+                public View getInfoWindow(Marker marker) {
+                    return null;
+                }
+
+                @Override
+                public View getInfoContents(Marker marker) {
+
+                    // Getting view from the layout file
+                    View v = getLayoutInflater().inflate(R.layout.googlemaps_popup, null);
+
+                    TextView title = (TextView) v.findViewById(R.id.txt_Title);
+                    title.setText(marker.getSnippet());
+
+                    return v;
+                }
+
+            });
+        }
     }
 
 
-    /*
+    public void customAddMarker(LatLng latLng, String title, String snippet) {
+        MarkerOptions options = new MarkerOptions();
+        options.position(latLng).title(title).snippet(snippet).draggable(true);
+        mMap.addMarker(options);
+    }
 
-            /**
-             * Sets up the map if it is possible to do so (i.e., the Google Play services APK is correctly
-             * installed) and the map has not already been instantiated.. This will ensure that we only ever
-             * call {@link #setUpMap()} once when {@link #mMap} is not null.
-             * <p/>
-             * If it isn't installed {@link SupportMapFragment} (and
-             * {@link com.google.android.gms.maps.MapView MapView}) will show a prompt for the user to
-             * install/update the Google Play services APK on their device.
-             * <p/>
-             * A user can return to this FragmentActivity after following the prompt and correctly
-             * installing/updating/enabling the Google Play services. Since the FragmentActivity may not
-             * have been completely destroyed during this process (it is likely that it would only be
-             * stopped or paused), {@link #onCreate(Bundle)} may not be called again so we should call this
-             * method in {@link #onResume()} to guarantee that it will be called.
-             */
-            /*
-            private void setUpMapIfNeeded() {
-                // Do a null check to confirm that we have not already instantiated the map.
-                if (mMap == null) {
-                    // Try to obtain the map from the SupportMapFragment.
-                    mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
-                            .getMap();
-                    // Check if we were successful in obtaining the map.
-                    if (mMap != null) {
-                        setUpMap();
-                    }
+    private String getMapsApiDirectionsUrl(LatLng start, LatLng end, String mode) {
+        String url = "http://maps.googleapis.com/maps/api/directions/json?"
+                + "origin=" + start.latitude + "," + start.longitude
+                + "&destination=" + end.latitude + "," + end.longitude
+                + "&sensor=false&units=metric&mode=" + mode;
+        Log.d("url", url);
+        return url;
+    }
+
+    private class ReadTask extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... url) {
+            String data = "";
+            try {
+                HttpConnection http = new HttpConnection();
+                data = http.readUrl(url[0]);
+            } catch (Exception e) {
+                Log.d("Background Task", e.toString());
+            }
+            return data;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            new ParserTask().execute(result);
+        }
+    }
+
+    private class ParserTask extends
+            AsyncTask<String, Integer, List<List<HashMap<String, String>>>> {
+
+        @Override
+        protected List<List<HashMap<String, String>>> doInBackground(String... jsonData) {
+
+            JSONObject jObject;
+            List<List<HashMap<String, String>>> routes = null;
+
+            try {
+                jObject = new JSONObject(jsonData[0]);
+                PathJSONParser parser = new PathJSONParser();
+                routes = parser.parse(jObject);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return routes;
+        }
+
+        @Override
+        protected void onPostExecute(List<List<HashMap<String, String>>> routes) {
+            ArrayList<LatLng> points = null;
+            PolylineOptions polyLineOptions = null;
+
+            // traversing through routes
+            for (int i = 0; i < routes.size(); i++) {
+                points = new ArrayList<LatLng>();
+                polyLineOptions = new PolylineOptions();
+                List<HashMap<String, String>> path = routes.get(i);
+
+                for (int j = 0; j < path.size(); j++) {
+                    HashMap<String, String> point = path.get(j);
+
+                    double lat = Double.parseDouble(point.get("lat"));
+                    double lng = Double.parseDouble(point.get("lng"));
+                    LatLng position = new LatLng(lat, lng);
+
+                    points.add(position);
                 }
+
+                polyLineOptions.addAll(points);
+                polyLineOptions.width(10);
+                polyLineOptions.color(Color.BLUE);
             }
 
-            /**
-             * This is where we can add markers or lines, add listeners or move the camera. In this case, we
-             * just add a marker near Africa.
-             * <p/>
-             * This should only be called once and when we are sure that {@link #mMap} is not null.
-             */
-            /*
-            private void setUpMap() {
-                mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
-            }
-            */
+            mMap.addPolyline(polyLineOptions);
+        }
+    }
+
 
 }
