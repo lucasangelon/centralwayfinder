@@ -4,20 +4,13 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-<<<<<<< HEAD
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.TextView;
-
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
-=======
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
->>>>>>> master
+
+import java.util.ArrayList;
 
 import codefactory.centralwayfinderproject.R;
 import codefactory.centralwayfinderproject.models.Campus;
@@ -33,15 +26,7 @@ public class MenuActivity extends Activity implements OnClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
-<<<<<<< HEAD
-        //retrieve campus list from intent
-        campusList = (ArrayList<Campus>)getIntent().getSerializableExtra("campuses");
-        //debug
-        tempTextView = (TextView)findViewById(R.id.tempTextView);
-        if (campusList.size()>0) tempTextView.setText("Found "+String.valueOf(campusList.size())+ " campuses!");
-    }
-=======
->>>>>>> master
+
 
         btn_button1 = (Button) findViewById(R.id.button1);
         btn_button2 = (Button) findViewById(R.id.button2);
