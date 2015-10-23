@@ -36,7 +36,7 @@ public class MenuActivity extends Activity implements OnClickListener {
         switch (v.getId()) {
             case R.id.button1:
                 //Go to Search Activity
-                Intent intent = new Intent(this, SelectCampusActivity.class);
+                Intent intent = new Intent(this, GoogleMapActivity.class);
                 startActivity(intent);
 
                 break;
@@ -52,6 +52,8 @@ public class MenuActivity extends Activity implements OnClickListener {
 
                 break;
             case R.id.button4:
+                Toast.makeText(getApplicationContext(), "Missing Implementation...",
+                        Toast.LENGTH_LONG).show();
 
                 break;
 

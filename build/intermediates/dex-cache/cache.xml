@@ -2,20 +2,6 @@
 <items version="2" >
 
     <item
-        jar="D:\GitHub\centralwayfinder\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.0.0\jars\classes.jar"
-        jumboMode="false"
-        revision="23.0.0"
-        sha1="8413c27b45b7fe61dca4a98159f65e2cee215f5a">
-        <dex dex="D:\GitHub\centralwayfinder\app\build\intermediates\pre-dexed\debug\classes-f6ec1f5dc614fe9c981b51f67384bc21b28dd8bb.jar" />
-    </item>
-    <item
-        jar="C:\Users\Gustavo\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\23.0.0\support-annotations-23.0.0.jar"
-        jumboMode="false"
-        revision="23.0.0"
-        sha1="990e7f98a7bad86a40b1f0bcfeb039023afd0839">
-        <dex dex="D:\GitHub\centralwayfinder\app\build\intermediates\pre-dexed\debug\support-annotations-23.0.0-5e92eaa581cd4a28ae915fc3d76977031bc8699e.jar" />
-    </item>
-    <item
         jar="D:\GitHub\centralwayfinder\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.0.0\jars\libs\internal_impl-23.0.0.jar"
         jumboMode="false"
         revision="23.0.0"
@@ -28,6 +14,27 @@
         revision="23.0.0"
         sha1="4fcf0b1879f8caf497c073e1432d398e9e2988c1">
         <dex dex="D:\GitHub\centralwayfinder\app\build\intermediates\pre-dexed\debug\classes-fb530558da7b274d66f700987490e6e5332dc85e.jar" />
+    </item>
+    <item
+        jar="D:\GitHub\centralwayfinder\app\libs\ksoap2-android-assembly-3.4.0-jar-with-dependencies.jar"
+        jumboMode="false"
+        revision="23.0.0"
+        sha1="45fbaab416fb5cff992e662d1f7a83786f084fc3">
+        <dex dex="D:\GitHub\centralwayfinder\app\build\intermediates\pre-dexed\debug\ksoap2-android-assembly-3.4.0-jar-with-dependencies-c9cc565c6939d61b2588b466a103edabf13a56ee.jar" />
+    </item>
+    <item
+        jar="D:\GitHub\centralwayfinder\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.0.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.0"
+        sha1="8413c27b45b7fe61dca4a98159f65e2cee215f5a">
+        <dex dex="D:\GitHub\centralwayfinder\app\build\intermediates\pre-dexed\debug\classes-f6ec1f5dc614fe9c981b51f67384bc21b28dd8bb.jar" />
+    </item>
+    <item
+        jar="C:\Users\Gustavo\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\23.0.0\support-annotations-23.0.0.jar"
+        jumboMode="false"
+        revision="23.0.0"
+        sha1="990e7f98a7bad86a40b1f0bcfeb039023afd0839">
+        <dex dex="D:\GitHub\centralwayfinder\app\build\intermediates\pre-dexed\debug\support-annotations-23.0.0-5e92eaa581cd4a28ae915fc3d76977031bc8699e.jar" />
     </item>
 
 </items>
