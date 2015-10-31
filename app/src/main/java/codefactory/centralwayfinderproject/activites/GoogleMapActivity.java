@@ -1,5 +1,6 @@
 package codefactory.centralwayfinderproject.activites;
 
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
@@ -27,9 +28,11 @@ import java.util.HashMap;
 import java.util.List;
 
 import codefactory.centralwayfinderproject.R;
+import codefactory.centralwayfinderproject.dao.CampusDataSource;
 import codefactory.centralwayfinderproject.helpers.HttpConnection;
 import codefactory.centralwayfinderproject.helpers.PathJSONParser;
 import codefactory.centralwayfinderproject.helpers.Useful;
+import codefactory.centralwayfinderproject.models.Campus;
 
 /**
  * Created by Gustavo on 21/09/2015.
@@ -38,11 +41,15 @@ public class GoogleMapActivity extends FragmentActivity {
 
     private LatLng startLocation, endLocation;
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
-    private Double startLatitude;
-    private Double startLongitude;
-    private Useful util;
     private final static String MODE_DRIVING = "driving";
     private final static String MODE_WALKING = "walking";
+
+    private Campus startPoint;
+    private Useful util;
+
+    private CampusDataSource dataSource;
+    private SharedPreferences prefs;
+    private String defaultCampus;
 
     @Override
     @SuppressWarnings("ResourceType")
@@ -50,25 +57,31 @@ public class GoogleMapActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_google_map);
 
+        startPoint = new Campus();
+        util = new Useful(this);
         /*
         * Check if the gps is ON or OFF
         * In case ON: Use current location as start point
         * In case OFF: Use campus start point as start point
         */
-        util = new Useful(this);
-
         if(util.isGpsOn()) {
             //Get current location
-            startLatitude = util.getUserLocation().getLatitude();
-            startLongitude = util.getUserLocation().getLongitude();
+            startPoint.setCampusLat(util.getUserLocation().getLatitude());
+            startPoint.setCampusLong(util.getUserLocation().getLongitude());
+            startPoint.setCampusZoom(15.0);
 
         } else {
-            //Set campus default location
-            startLatitude = -31.953524;
-            startLongitude = 115.860801;
+            //Getting default campus name from preference file.
+            prefs = getSharedPreferences("Settings", MODE_PRIVATE);
+            defaultCampus = prefs.getString("defaultCampus", null);
+
+            //Getting campus detailing from database
+            dataSource = new CampusDataSource(this);
+            startPoint = dataSource.getSpecificCampus(defaultCampus);
+
         }
 
-        startLocation = new LatLng(startLatitude, startLongitude);
+        startLocation = new LatLng(startPoint.getCampusLat(), startPoint.getCampusLong());
         setUpMapIfNeeded();
     }
 
@@ -97,8 +110,8 @@ public class GoogleMapActivity extends FragmentActivity {
      */
     private void setUpMap() {
 
-        mMap.addMarker(new MarkerOptions().position(startLocation).title("Start Point"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(startLocation, 15));
+        mMap.addMarker(new MarkerOptions().position(startLocation).title(startPoint.getCampusName()));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(startLocation,Float.parseFloat(Double.toString(startPoint.getCampusZoom()))));
         mMap.setMyLocationEnabled(false);
     }
 
@@ -132,7 +145,7 @@ public class GoogleMapActivity extends FragmentActivity {
 
             //Re-call the map with the new location
             customAddMarker(endLocation, destination, destination);
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(endLocation, 15));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(endLocation, Float.parseFloat(Double.toString(startPoint.getCampusZoom()))));
             mMap.setMyLocationEnabled(false);
 
             /// Teste
