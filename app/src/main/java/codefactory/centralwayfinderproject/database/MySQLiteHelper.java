@@ -21,10 +21,20 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     public static final String COLUMN_LAT = "CampusLat";
     public static final String COLUMN_ZOOM = "CampusZoom";
 
+    //Room table structure
+    public static final String TABLE_ROOM = "room";
+    public static final String COLUMN_ROOM_ID = "RoomID";
+    public static final String COLUMN_ROOM_NAME = "RoomName";
+
     //Database queries from Campus
     public static final String SQL_SELECT_TABLE_CAMPUS = "SELECT * FROM " + TABLE_CAMPUS ;
     public static final String SQL_CREATE_TABLE_CAMPUS = "CREATE TABLE " + TABLE_CAMPUS + "(" + COLUMN_ID + " text primary key, " + COLUMN_NAME + " text, " + COLUMN_LONG + " double, " + COLUMN_LAT + " double, " + COLUMN_ZOOM + " double)";
     public static final String SQL_DROP_TABLE_CAMPUS = "DROP TABLE IF EXISTS " + TABLE_CAMPUS;
+
+    //Database queries from Room
+    public static final String SQL_SELECT_TABLE_ROOM = "SELECT * FROM " + TABLE_ROOM ;
+    public static final String SQL_CREATE_TABLE_ROOM = "CREATE TABLE " + TABLE_ROOM + "(" + COLUMN_ROOM_ID + " integer primary key, " + COLUMN_ROOM_NAME + " text)";
+    public static final String SQL_DROP_TABLE_ROOM = "DROP TABLE IF EXISTS " + TABLE_ROOM;
 
     public MySQLiteHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -39,7 +49,8 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
 
         db.execSQL(SQL_CREATE_TABLE_CAMPUS);
-        Log.d("DATABASE", "SUCCESS ");
+        db.execSQL(SQL_CREATE_TABLE_ROOM);
+        Log.d("DATABASE CREATE", "SUCCESS ");
     }
 
     @Override
@@ -49,6 +60,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
                 "Upgrading database from version " + oldVersion + " to "
                         + newVersion + ", which will destroy all old data");
         db.execSQL(SQL_DROP_TABLE_CAMPUS);
+        db.execSQL(SQL_DROP_TABLE_ROOM);
         onCreate(db);
     }
 }

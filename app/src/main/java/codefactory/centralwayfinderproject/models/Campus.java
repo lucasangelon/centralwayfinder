@@ -1,12 +1,10 @@
 package codefactory.centralwayfinderproject.models;
 
-import java.io.Serializable;
-
 /**
- * Created by Chuck on 18/09/2015.
- *  implements Serializable so it can be passed as an intent extra
+ * Created by Gustavo T. Dias
+ * Class to represent Campus' object
  */
-public class Campus implements Serializable {
+public class Campus {
 
     //Variables
     private String campusID;
@@ -17,15 +15,6 @@ public class Campus implements Serializable {
 
     public Campus(){
         //Default construction
-    }
-
-    public Campus(String CampusID, String CampusName, double CampusLong, double CampusLat, double CampusZoom)
-    {
-        campusID = CampusID;
-        campusName = CampusName;
-        campusLong = CampusLong;
-        campusLat = CampusLat;
-        campusZoom = CampusZoom;
     }
 
     public String getCampusID() {

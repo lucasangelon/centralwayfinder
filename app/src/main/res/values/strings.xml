@@ -1,5 +1,5 @@
 <resources>
-    <string name="title_activity_splash">SplashActivity</string>
+    <string name="title_activity_splash">Central WayFinder</string>
     <string name="title_activity_copyright"></string>
     <string name="app_name">Central Wayfinder</string>
     <string name="copyright1"> A. General Information

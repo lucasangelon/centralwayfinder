@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ProgressBar;
 
 import codefactory.centralwayfinderproject.R;
 import codefactory.centralwayfinderproject.helpers.WebServiceConnection;
@@ -22,6 +23,7 @@ import codefactory.centralwayfinderproject.helpers.WebServiceConnection;
 public class SplashActivity extends Activity implements OnClickListener {
 
     private Button btn_startApp;
+    private ProgressBar progressBar;
     private SharedPreferences prefs;
     private boolean isFirstTime;
 
@@ -36,16 +38,19 @@ public class SplashActivity extends Activity implements OnClickListener {
 
         //Initialise Button and add listener
         btn_startApp = (Button) findViewById(R.id.btnFirstClick);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar1);
         btn_startApp.setOnClickListener(this);
 
         //Checking Networking Connection
         if (isOnline()) {
 
             if(isFirstTime){
-                WebServiceConnection webServiceConnection = new WebServiceConnection(this);
-                //check web service connection and retrieve campus list (if connection available)
-                /*AsyncCallWS checkServiceConnAST = new AsyncCallWS();
-                checkServiceConnAST.execute();*/
+                WebServiceConnection webServiceConnection = new WebServiceConnection(this,1);
+                webServiceConnection.checkServiceConnAST.execute();
+
+            }else{
+                btn_startApp.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.GONE);
             }
 
         } else {
@@ -74,7 +79,6 @@ public class SplashActivity extends Activity implements OnClickListener {
 
         if(v.getId() == R.id.btnFirstClick){
             if (isFirstTime){
-                prefs.edit().putBoolean("firstTime", false).commit();
                 //Go to Select Campus Activity
                 Intent intent = new Intent(this, SelectCampusActivity.class);
                 startActivity(intent);
