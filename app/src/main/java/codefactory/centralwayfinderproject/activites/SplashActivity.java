@@ -15,7 +15,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.ProgressBar;
 
 import codefactory.centralwayfinderproject.R;
 import codefactory.centralwayfinderproject.helpers.WebServiceConnection;
@@ -23,7 +22,6 @@ import codefactory.centralwayfinderproject.helpers.WebServiceConnection;
 public class SplashActivity extends Activity implements OnClickListener {
 
     private Button btn_startApp;
-    private ProgressBar progressBar;
     private SharedPreferences prefs;
     private boolean isFirstTime;
 
@@ -38,7 +36,6 @@ public class SplashActivity extends Activity implements OnClickListener {
 
         //Initialise Button and add listener
         btn_startApp = (Button) findViewById(R.id.btnFirstClick);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar1);
         btn_startApp.setOnClickListener(this);
 
         //Checking Networking Connection
@@ -48,9 +45,6 @@ public class SplashActivity extends Activity implements OnClickListener {
                 WebServiceConnection webServiceConnection = new WebServiceConnection(this,1);
                 webServiceConnection.checkServiceConnAST.execute();
 
-            }else{
-                btn_startApp.setVisibility(View.VISIBLE);
-                progressBar.setVisibility(View.GONE);
             }
 
         } else {

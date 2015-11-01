@@ -18,6 +18,7 @@ import java.util.ArrayList;
 
 import codefactory.centralwayfinderproject.R;
 import codefactory.centralwayfinderproject.dao.CampusDataSource;
+import codefactory.centralwayfinderproject.helpers.Useful;
 import codefactory.centralwayfinderproject.helpers.WebServiceConnection;
 import codefactory.centralwayfinderproject.models.Campus;
 
@@ -29,6 +30,7 @@ public class SelectCampusActivity extends AppCompatActivity{
     private ArrayList<String> campusNames = new ArrayList();
     private SharedPreferences prefs;
     private WebServiceConnection webServiceConnection;
+    private Useful useful;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,17 +55,17 @@ public class SelectCampusActivity extends AppCompatActivity{
                 android.R.layout.simple_list_item_1, campusNames);
 
         listViewCampus.setAdapter(adapter);
-
         listViewCampus.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapter, View v, int position, long arg3) {
                 // Get item name on the list
                 String value = (String) adapter.getItemAtPosition(position);
 
-                //Save default name campus on the preference file for future's checking
+                //Save campus on the preference file for future's checking, also set up first time to false
                 prefs = getSharedPreferences("Settings", MODE_PRIVATE);
-                prefs.edit().putString("defaultCampus", value).commit();
                 prefs.edit().putBoolean("firstTime", false).commit();
+                useful = new Useful(getApplicationContext());
+                useful.setDefaultCampus(campusesList.get(position));
 
                 //Gets rooms from WebService and save on the database
                 getRoomOnWebService();

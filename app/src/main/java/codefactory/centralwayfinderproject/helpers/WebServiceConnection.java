@@ -3,15 +3,12 @@ package codefactory.centralwayfinderproject.helpers;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
-import android.os.Handler;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ProgressBar;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
@@ -70,14 +67,20 @@ public class WebServiceConnection {
         //Variables
         CampusDataSource campusDataSource;
         RoomDataSource roomDataSource;
-        private SharedPreferences prefs;
-        ProgressBar progressBar;
+        //SharedPreferences prefs;
+        Useful useful;
+        Dialog dialog;
 
         public FetchData() {
         }
 
         @Override
         protected void onPreExecute() {
+
+            dialog = new Dialog(mContext);
+            dialog.setContentView(R.layout.loading_popup);
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+            dialog.show();
 
         }
 
@@ -119,26 +122,7 @@ public class WebServiceConnection {
                     alert.show();
 
             }else{
-                 new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {// This method will be executed once the timer is over
-
-                        switch (option_method) {
-                            case 1://Run if you choose getCampusesFromWebService()
-                                Button btn_startApp = (Button) ((Activity) mContext).findViewById(R.id.btnFirstClick);
-                                progressBar = (ProgressBar) ((Activity) mContext).findViewById(R.id.progressBar1);
-
-                                btn_startApp.setVisibility(View.VISIBLE);
-                                progressBar.setVisibility(View.GONE);
-
-                               /* break;
-
-                            case 2://Run if you choose getRoomsByCampusFromWebService()
-                                break;*/
-                        }
-
-                    }
-                }, 1000);    // delay is good so that wrapping up of data is done
+                dialog.dismiss(); // Close loading popup after execute doInBackground is method
             }
 
         }
@@ -238,13 +222,9 @@ public class WebServiceConnection {
         @SuppressLint("LongLogTag")
         public void getRoomsByCampusFromWebService() {
             //Variables declaration
-            String campusName;
             Campus campus;
-
-            campusDataSource = new CampusDataSource(mContext);
-            prefs = (mContext).getSharedPreferences("Settings", (mContext).MODE_PRIVATE);
-            campusName = prefs.getString("defaultCampus", null);
-            campus = campusDataSource.getSpecificCampus(campusName);
+            useful = new Useful(mContext);
+            campus = useful.getDefaultCampus();
 
             //Create request
             SoapObject request = new SoapObject(NAMESPACE, METHOD_GET_ROOMS_BY_CAMPUS);
