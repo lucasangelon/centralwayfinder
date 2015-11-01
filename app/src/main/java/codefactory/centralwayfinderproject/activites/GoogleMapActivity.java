@@ -72,12 +72,7 @@ public class GoogleMapActivity extends FragmentActivity {
 
         } else {
             //Getting default campus name from preference file.
-            prefs = getSharedPreferences("Settings", MODE_PRIVATE);
-            defaultCampus = prefs.getString("defaultCampus", null);
-
-            //Getting campus detailing from database
-            dataSource = new CampusDataSource(this);
-            startPoint = dataSource.getSpecificCampus(defaultCampus);
+            startPoint = util.getDefaultCampus();
 
         }
 
