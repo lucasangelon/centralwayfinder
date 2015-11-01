@@ -2,18 +2,53 @@
 <items version="2" >
 
     <item
-        jar="D:\GitHub\centralwayfinder\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.0.0\jars\classes.jar"
+        jar="D:\GitHub\centralwayfinder\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-base\8.1.0\jars\classes.jar"
         jumboMode="false"
         revision="23.0.0"
-        sha1="8413c27b45b7fe61dca4a98159f65e2cee215f5a">
-        <dex dex="D:\GitHub\centralwayfinder\app\build\intermediates\pre-dexed\debug\classes-f6ec1f5dc614fe9c981b51f67384bc21b28dd8bb.jar" />
+        sha1="82825756edeeb3b56b15e73b2edd56e93da5a444">
+        <dex dex="D:\GitHub\centralwayfinder\app\build\intermediates\pre-dexed\debug\classes-fcce9e2709d676c79b71daa68f1c8df4f8e2839b.jar" />
     </item>
     <item
-        jar="C:\Users\Gustavo\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\23.0.0\support-annotations-23.0.0.jar"
+        jar="D:\GitHub\centralwayfinder\app\build\intermediates\exploded-aar\com.android.support\mediarouter-v7\22.2.0\jars\libs\internal_impl-22.2.0.jar"
         jumboMode="false"
         revision="23.0.0"
-        sha1="990e7f98a7bad86a40b1f0bcfeb039023afd0839">
-        <dex dex="D:\GitHub\centralwayfinder\app\build\intermediates\pre-dexed\debug\support-annotations-23.0.0-5e92eaa581cd4a28ae915fc3d76977031bc8699e.jar" />
+        sha1="0632f06970823b7e3436f649bfa65b47035c91d0">
+        <dex dex="D:\GitHub\centralwayfinder\app\build\intermediates\pre-dexed\debug\internal_impl-22.2.0-3c169d78b9d8b483fa4087c2ebb4f543afce2ed7.jar" />
+    </item>
+    <item
+        jar="D:\GitHub\centralwayfinder\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-cast\8.1.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.0"
+        sha1="3178362320bcf51228835b60ff978efadfd1f783">
+        <dex dex="D:\GitHub\centralwayfinder\app\build\intermediates\pre-dexed\debug\classes-2a62901f10600324006712f81e5e97a965ece782.jar" />
+    </item>
+    <item
+        jar="D:\GitHub\centralwayfinder\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-games\8.1.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.0"
+        sha1="993834cb17d07d51b92db89d2c330243592ebf77">
+        <dex dex="D:\GitHub\centralwayfinder\app\build\intermediates\pre-dexed\debug\classes-3fab74c3d988bfe39d2bffca45b32eb4948421e0.jar" />
+    </item>
+    <item
+        jar="D:\GitHub\centralwayfinder\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-wallet\8.1.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.0"
+        sha1="325788a04b436a0bccbc5b4c54cf0f12ebdcbd2d">
+        <dex dex="D:\GitHub\centralwayfinder\app\build\intermediates\pre-dexed\debug\classes-018c2c29cb8f8e2063c8ad6ad61c3d4fca321e9c.jar" />
+    </item>
+    <item
+        jar="D:\GitHub\centralwayfinder\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-appinvite\8.1.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.0"
+        sha1="b92002cb2f0e11a226ac5bac6dff1dc2a9d0b774">
+        <dex dex="D:\GitHub\centralwayfinder\app\build\intermediates\pre-dexed\debug\classes-c012b866690382a092961471debcc5668bcd131d.jar" />
+    </item>
+    <item
+        jar="D:\GitHub\centralwayfinder\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-drive\8.1.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.0"
+        sha1="3c729e6d76a36c5dc27e6a4c4009296f49eaa88a">
+        <dex dex="D:\GitHub\centralwayfinder\app\build\intermediates\pre-dexed\debug\classes-2d6d3538b29f6c30c54625fbb45b2e03efa1321e.jar" />
     </item>
     <item
         jar="D:\GitHub\centralwayfinder\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.0.0\jars\libs\internal_impl-23.0.0.jar"
@@ -23,11 +58,158 @@
         <dex dex="D:\GitHub\centralwayfinder\app\build\intermediates\pre-dexed\debug\internal_impl-23.0.0-4343d07ccf293bfbbf8e3c0a4a059f9117a8da04.jar" />
     </item>
     <item
+        jar="D:\GitHub\centralwayfinder\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-plus\8.1.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.0"
+        sha1="d61920aba361832a9545a43fa8c9453eb02f18f7">
+        <dex dex="D:\GitHub\centralwayfinder\app\build\intermediates\pre-dexed\debug\classes-b9f3c85e5b3e6b83efe7c53eb10a4f0fdfa5eda0.jar" />
+    </item>
+    <item
+        jar="D:\GitHub\centralwayfinder\app\libs\ksoap2-android-assembly-3.4.0-jar-with-dependencies.jar"
+        jumboMode="false"
+        revision="23.0.0"
+        sha1="45fbaab416fb5cff992e662d1f7a83786f084fc3">
+        <dex dex="D:\GitHub\centralwayfinder\app\build\intermediates\pre-dexed\debug\ksoap2-android-assembly-3.4.0-jar-with-dependencies-c9cc565c6939d61b2588b466a103edabf13a56ee.jar" />
+    </item>
+    <item
+        jar="D:\GitHub\centralwayfinder\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-vision\8.1.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.0"
+        sha1="17449c47df35c754b257532052f1270c444f7993">
+        <dex dex="D:\GitHub\centralwayfinder\app\build\intermediates\pre-dexed\debug\classes-23671aab703422d49cfb4f7b62876a9c30fc33e3.jar" />
+    </item>
+    <item
+        jar="D:\GitHub\centralwayfinder\app\build\intermediates\exploded-aar\com.android.support\mediarouter-v7\22.2.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.0"
+        sha1="dcf8c83c3dead00a6c4fe313e95f7aaca20dc641">
+        <dex dex="D:\GitHub\centralwayfinder\app\build\intermediates\pre-dexed\debug\classes-0de6427107260d9cd6db657aba7ac2d97b870b79.jar" />
+    </item>
+    <item
         jar="D:\GitHub\centralwayfinder\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\23.0.0\jars\classes.jar"
         jumboMode="false"
         revision="23.0.0"
         sha1="4fcf0b1879f8caf497c073e1432d398e9e2988c1">
         <dex dex="D:\GitHub\centralwayfinder\app\build\intermediates\pre-dexed\debug\classes-fb530558da7b274d66f700987490e6e5332dc85e.jar" />
+    </item>
+    <item
+        jar="D:\GitHub\centralwayfinder\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-fitness\8.1.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.0"
+        sha1="9cf8c0ef60847621c7ad00b4f78dbfc9daba4af2">
+        <dex dex="D:\GitHub\centralwayfinder\app\build\intermediates\pre-dexed\debug\classes-f0bd160e3429ce36062968b15d4dba615cca9449.jar" />
+    </item>
+    <item
+        jar="D:\GitHub\centralwayfinder\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-wearable\8.1.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.0"
+        sha1="97f3b099801a9ad9d70e835b9125273e986eb68d">
+        <dex dex="D:\GitHub\centralwayfinder\app\build\intermediates\pre-dexed\debug\classes-b357c69aa3f6e251e2923de2ce918b901e7116ca.jar" />
+    </item>
+    <item
+        jar="C:\Users\Gustavo\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\23.0.0\support-annotations-23.0.0.jar"
+        jumboMode="false"
+        revision="23.0.0"
+        sha1="990e7f98a7bad86a40b1f0bcfeb039023afd0839">
+        <dex dex="D:\GitHub\centralwayfinder\app\build\intermediates\pre-dexed\debug\support-annotations-23.0.0-5e92eaa581cd4a28ae915fc3d76977031bc8699e.jar" />
+    </item>
+    <item
+        jar="D:\GitHub\centralwayfinder\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-ads\8.1.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.0"
+        sha1="997773777cf3904c11d6764fe3b7668538220e49">
+        <dex dex="D:\GitHub\centralwayfinder\app\build\intermediates\pre-dexed\debug\classes-3f8074c56875205d4031c6cc98ada0a7edc973eb.jar" />
+    </item>
+    <item
+        jar="D:\GitHub\centralwayfinder\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-safetynet\8.1.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.0"
+        sha1="3b05c18f60969ecc2ba49c0409c4b96be2d9cb0c">
+        <dex dex="D:\GitHub\centralwayfinder\app\build\intermediates\pre-dexed\debug\classes-c1fe3810bd4dc1669b74296e3f57e43e7eafe939.jar" />
+    </item>
+    <item
+        jar="D:\GitHub\centralwayfinder\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-gcm\8.1.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.0"
+        sha1="dcb5b75baf05d92e61d5706737200ee55949f97b">
+        <dex dex="D:\GitHub\centralwayfinder\app\build\intermediates\pre-dexed\debug\classes-b23281dc2b90cb7e2414f872c096edad199814d9.jar" />
+    </item>
+    <item
+        jar="D:\GitHub\centralwayfinder\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-measurement\8.1.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.0"
+        sha1="482de223655d06253cc6a4955d653f8994169500">
+        <dex dex="D:\GitHub\centralwayfinder\app\build\intermediates\pre-dexed\debug\classes-b63190ef91817c97f154644810b5783d8e14dccf.jar" />
+    </item>
+    <item
+        jar="D:\GitHub\centralwayfinder\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.0.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.0"
+        sha1="8413c27b45b7fe61dca4a98159f65e2cee215f5a">
+        <dex dex="D:\GitHub\centralwayfinder\app\build\intermediates\pre-dexed\debug\classes-f6ec1f5dc614fe9c981b51f67384bc21b28dd8bb.jar" />
+    </item>
+    <item
+        jar="D:\GitHub\centralwayfinder\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-appindexing\8.1.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.0"
+        sha1="4477ea44f5ec5ad064022a22691732d7638ff197">
+        <dex dex="D:\GitHub\centralwayfinder\app\build\intermediates\pre-dexed\debug\classes-05310cdb659eb749661b1ba8e80ef91db395da25.jar" />
+    </item>
+    <item
+        jar="D:\GitHub\centralwayfinder\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-appstate\8.1.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.0"
+        sha1="82054090e487d78e163a988557db62d809fa9b95">
+        <dex dex="D:\GitHub\centralwayfinder\app\build\intermediates\pre-dexed\debug\classes-3933f9708d0f5ca9b5d19c81e81a73aa7070bcf5.jar" />
+    </item>
+    <item
+        jar="D:\GitHub\centralwayfinder\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-location\8.1.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.0"
+        sha1="3aed37c38c56679602255dd72ef356da5d327cda">
+        <dex dex="D:\GitHub\centralwayfinder\app\build\intermediates\pre-dexed\debug\classes-c2e48b163188f23f267e15ab7ee102f010c4e866.jar" />
+    </item>
+    <item
+        jar="D:\GitHub\centralwayfinder\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-identity\8.1.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.0"
+        sha1="d294caf562c4c678b2ef351662a0ca6f1a4d06c0">
+        <dex dex="D:\GitHub\centralwayfinder\app\build\intermediates\pre-dexed\debug\classes-1ebba134cfc7f0a5fcc84ebb1791513154c8b69d.jar" />
+    </item>
+    <item
+        jar="D:\GitHub\centralwayfinder\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-maps\8.1.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.0"
+        sha1="2a7e47da654546f9457deb6132364f1bf33a1857">
+        <dex dex="D:\GitHub\centralwayfinder\app\build\intermediates\pre-dexed\debug\classes-b8067bbbc70f5c33f7949b17479ce432f972f9d2.jar" />
+    </item>
+    <item
+        jar="D:\GitHub\centralwayfinder\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-panorama\8.1.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.0"
+        sha1="d93480da1d303122ee67dc3bc23e6297bdef9951">
+        <dex dex="D:\GitHub\centralwayfinder\app\build\intermediates\pre-dexed\debug\classes-a1a50ea88c9f9e823c7815b99547e6389f729585.jar" />
+    </item>
+    <item
+        jar="D:\GitHub\centralwayfinder\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-basement\8.1.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.0"
+        sha1="d0dda274b703dd9c5bb056867649d22b4171ae7d">
+        <dex dex="D:\GitHub\centralwayfinder\app\build\intermediates\pre-dexed\debug\classes-9383a5807f85d71ad1793b7426235b0f20b495ad.jar" />
+    </item>
+    <item
+        jar="D:\GitHub\centralwayfinder\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-analytics\8.1.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.0"
+        sha1="95758a2905669affbffc5ddd262921d375674fad">
+        <dex dex="D:\GitHub\centralwayfinder\app\build\intermediates\pre-dexed\debug\classes-2e92bb882f318cb6aff2a72c06a40f8e1af1e020.jar" />
+    </item>
+    <item
+        jar="D:\GitHub\centralwayfinder\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-nearby\8.1.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.0"
+        sha1="041d93cf0533591c29d1d7263b2fa114dbfb20bd">
+        <dex dex="D:\GitHub\centralwayfinder\app\build\intermediates\pre-dexed\debug\classes-71fd18f94e7ca30adf2756f68cb0a03ed5b19bf2.jar" />
     </item>
 
 </items>

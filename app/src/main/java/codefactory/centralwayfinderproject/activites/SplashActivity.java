@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -14,50 +15,79 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ProgressBar;
 
 import codefactory.centralwayfinderproject.R;
+import codefactory.centralwayfinderproject.helpers.WebServiceConnection;
 
 public class SplashActivity extends Activity implements OnClickListener {
 
     private Button btn_startApp;
+    private ProgressBar progressBar;
+    private SharedPreferences prefs;
+    private boolean isFirstTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
+        //Loading preferences
+        prefs = getSharedPreferences("Settings",MODE_PRIVATE);
+        isFirstTime = prefs.getBoolean("firstTime", true);
+
         //Initialise Button and add listener
         btn_startApp = (Button) findViewById(R.id.btnFirstClick);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar1);
         btn_startApp.setOnClickListener(this);
 
         //Checking Networking Connection
-        if (!isOnline()) {
-            /*
-                Promt user to connect to network or exit application
-             */
+        if (isOnline()) {
+
+            if(isFirstTime){
+                WebServiceConnection webServiceConnection = new WebServiceConnection(this,1);
+                webServiceConnection.checkServiceConnAST.execute();
+
+            }else{
+                btn_startApp.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.GONE);
+            }
+
+        } else {
+            //Prompt user to connect to network or exit application
             noNetworkConnectionDialog();
             Log.d("Not Online", "NOT CONNECTED TO THE INTERNET");
         }
 
+
         //Checking GPS Status
         if (!isGpsOn()) {
             /*
-                Promt user to connect to GPS status
+                Prompt user to connect to GPS status
              */
             noGpsConnectionDialog();
-            Log.d("Not GPS", "GPS IS OFF");
+            Log.d("No GPS", "GPS IS OFF");
         }
-    }
+        Log.d("DEBUG", "ENABLING BUTTON");
+        btn_startApp.setEnabled(true);
 
+    }
 
 
     @Override
     public void onClick(View v) {
 
         if(v.getId() == R.id.btnFirstClick){
-            //Go to Menu Activity
-            Intent intent = new Intent(this, MenuActivity.class);
-            startActivity(intent);
+            if (isFirstTime){
+                //Go to Select Campus Activity
+                Intent intent = new Intent(this, SelectCampusActivity.class);
+                startActivity(intent);
+            }else{
+                //Go to Menu Activity
+                Intent intent = new Intent(this, MenuActivity.class);
+                startActivity(intent);
+            }
+
         }
 
     }
@@ -72,13 +102,13 @@ public class SplashActivity extends Activity implements OnClickListener {
     private void noGpsConnectionDialog() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Please, Check Your Location Connection. \n If location is on the App works with more accuracy.")
-                .setTitle("No Location Connection")
+        builder.setMessage("Some features of this app will not be available without location services enabled")
+                .setTitle("LOCATION SERVICE DISABLED")
                 .setCancelable(false)
                 /*
                     Go to location settings
                  */
-                .setPositiveButton("Location Setting",
+                .setPositiveButton("Go to location settings",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
@@ -114,7 +144,7 @@ public class SplashActivity extends Activity implements OnClickListener {
 
         if(netInfo != null && netInfo.isConnectedOrConnecting()){
             return true;
-        }else return false;
+        } else return false;
 
     }
 
@@ -127,13 +157,13 @@ public class SplashActivity extends Activity implements OnClickListener {
     private void noNetworkConnectionDialog() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Please, Check Your Internet Connection")
-                .setTitle("No Network Connection")
+        builder.setMessage("This app requires an active network connection, please activate network and restart app")
+                .setTitle("NETWORK ERROR")
                 .setCancelable(false)
                 /*
                     Go to network settings
                  */
-                .setPositiveButton("Network Setting",
+                .setPositiveButton("Go to network settings",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 Intent i = new Intent(Settings.ACTION_SETTINGS);
@@ -145,7 +175,7 @@ public class SplashActivity extends Activity implements OnClickListener {
                 /*
                     Exits app if user
                  */
-                .setNegativeButton("Exit",
+                .setNegativeButton("Exit App",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 SplashActivity.this.finish();
@@ -156,10 +186,7 @@ public class SplashActivity extends Activity implements OnClickListener {
         alert.show();
     }
 
-
-
-
-    /**
+   /**
      * Checks for an GPS Connection
      * @return Boolean
      */

@@ -52,6 +52,8 @@ public class MenuActivity extends Activity implements OnClickListener {
 
                 break;
             case R.id.button4:
+                Toast.makeText(getApplicationContext(), "Missing Implementation...",
+                        Toast.LENGTH_LONG).show();
 
                 break;
 
