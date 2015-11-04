@@ -18,6 +18,7 @@ import android.widget.Button;
 
 import codefactory.centralwayfinderproject.R;
 import codefactory.centralwayfinderproject.helpers.WebServiceConnection;
+import codefactory.centralwayfinderproject.helpers.kSOAPManager;
 
 public class SplashActivity extends Activity implements OnClickListener {
 
@@ -25,9 +26,14 @@ public class SplashActivity extends Activity implements OnClickListener {
     private SharedPreferences prefs;
     private boolean isFirstTime;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        kSOAPManager temp = new kSOAPManager();
+        temp.SearchMainRooms("PE");
+
         setContentView(R.layout.activity_splash);
 
         //Loading preferences
