@@ -3,6 +3,8 @@ package codefactory.centralwayfinderproject.helpers;
 import android.os.AsyncTask;
 
 import org.ksoap2.SoapEnvelope;
+import org.ksoap2.serialization.KvmSerializable;
+import org.ksoap2.serialization.PropertyInfo;
 import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapPrimitive;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
@@ -11,6 +13,7 @@ import org.ksoap2.transport.HttpTransportSE;
 import java.io.IOException;
 import java.net.Proxy;
 import java.net.SocketTimeoutException;
+import java.util.Hashtable;
 
 /**
  * Created by Dillon on 4/11/2015.
@@ -31,8 +34,8 @@ public class kSOAPManager extends AsyncTask<String, Void, Void>{
     private static final String SEARCHROOMS_METHODNAME = "SearchRooms";
     private static final String SEARCHROOMS_ACTION = "http://tempuri.org/WF_Service_Interface/SearchRooms";
 
-    private static final String SEARCHMAINROOMS_METHODNAME = "SearchMainRooms";
-    private static final String SEARCHMAINROOMS_ACTION = "http://tempuri.org/WF_Service_Interface/SearchMainRooms";
+    private static final String SEARCHSERVICES_METHODNAME = "SearchMainRooms";
+    private static final String SEARCHSERVICES_ACTION = "http://tempuri.org/WF_Service_Interface/SearchMainRooms";
 
     private static final String RESOLVEPATH_METHODNAME = "ResolvePath";
     private static final String RESOLVEPATH_ACTION = "http://tempuri.org/WF_Service_Interface/ResolvePath";
@@ -92,12 +95,12 @@ public class kSOAPManager extends AsyncTask<String, Void, Void>{
         }
     }
 
-    public void SearchMainRooms(String CampusID)
+    public void SearchServices(String CampusID)
     {
         if(!lockOut)
         {
-            action = SEARCHMAINROOMS_ACTION;
-            request = new SoapObject(NAMESPACE, SEARCHMAINROOMS_METHODNAME);
+            action = SEARCHSERVICES_ACTION;
+            request = new SoapObject(NAMESPACE, SEARCHSERVICES_METHODNAME);
             request.addProperty("CampusID", CampusID);
 
             lockOut = true;
@@ -135,6 +138,7 @@ public class kSOAPManager extends AsyncTask<String, Void, Void>{
         HttpTransportSE http = new HttpTransportSE(Proxy.NO_PROXY,MAIN_REQUEST_URL,60000);
         http.setXmlVersionTag("<!--?xml version=\"1.0\" encoding= \"UTF-8\" ?-->");
         SoapSerializationEnvelope envelope = getSoapEnvelope(request);
+        //envelope.addMapping(NAMESPACE, "SOAP_SearchCampus", new SOAP_SearchCampus().getClass());
         try
         {
             http.call(action, envelope);
@@ -154,8 +158,18 @@ public class kSOAPManager extends AsyncTask<String, Void, Void>{
 
 
     // HELPER CLASSES
-    public class SOAP_SearchCampus
+    public class SOAP_SearchCampus implements KvmSerializable
     {
+        private String innerText = null;
+
+        public String campusID;
+        public String campusName;
+        public double campusLat;
+        public double campusLong;
+        public float campusZoom;
+
+        public SOAP_SearchCampus(){}
+
         public SOAP_SearchCampus(String CampusID, String CampusName, double CampusLat, double CampusLong, float CampusZoom)
         {
             campusID = CampusID;
@@ -164,12 +178,120 @@ public class kSOAPManager extends AsyncTask<String, Void, Void>{
             campusLong = CampusLong;
             campusZoom = CampusZoom;
         }
-        public String campusID;
-        public String campusName;
-        public double campusLat;
-        public double campusLong;
-        public float campusZoom;
 
+        @Override
+        public Object getProperty(int i) {
+            switch (i)
+            {
+                case 0:
+                {
+                    return campusID;
+                }
+                case 1:
+                {
+                    return campusName;
+                }
+                case 2:
+                {
+                    return campusLat;
+                }
+                case 3:
+                {
+                    return campusLong;
+                }
+                case 4:
+                {
+                    return campusZoom;
+                }
+            }
+            return null;
+        }
+
+        @Override
+        public int getPropertyCount() {
+            return 5;
+        }
+
+        @Override
+        public void setProperty(int i, Object o) {
+            switch (i)
+            {
+                case 0:
+                {
+                    campusID = o.toString();
+                    break;
+                }
+                case 1:
+                {
+                    campusName = o.toString();
+                    break;
+                }
+                case 2:
+                {
+                    campusLat = Double.parseDouble(o.toString());
+                    break;
+                }
+                case 3:
+                {
+                    campusLong = Double.parseDouble(o.toString());
+                    break;
+                }
+                case 4:
+                {
+                    campusZoom = Float.parseFloat(o.toString());
+                    break;
+                }
+                default:
+                {
+                    break;
+                }
+            }
+        }
+
+        @Override
+        public void getPropertyInfo(int i, Hashtable hashtable, PropertyInfo propertyInfo) {
+            switch (i) {
+                case 0: {
+                    propertyInfo.type = PropertyInfo.STRING_CLASS;
+                    propertyInfo.name = "campusID";
+                    break;
+                }
+                case 1: {
+                    propertyInfo.type = PropertyInfo.STRING_CLASS;
+                    propertyInfo.name = "campusName";
+                    break;
+                }
+                case 2: {
+                    propertyInfo.type = Double.class;
+                    propertyInfo.name = "campusLat";
+                    break;
+                }
+                case 3: {
+                    propertyInfo.type = Double.class;
+                    propertyInfo.name = "campusLong";
+                    break;
+                }
+                case 4: {
+                    propertyInfo.type = Float.class;
+                    propertyInfo.name = "campusZoom";
+                    break;
+                }
+                default:
+                {
+                    break;
+                }
+            }
+        }
+
+        @Override
+        public String getInnerText() {
+            return innerText;
+        }
+
+        @Override
+        public void setInnerText(String s) {
+            innerText = s;
+        }
     }
 
     public class SOAP_ResolvePath

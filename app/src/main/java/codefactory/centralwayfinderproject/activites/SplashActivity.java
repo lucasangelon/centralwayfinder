@@ -32,7 +32,7 @@ public class SplashActivity extends Activity implements OnClickListener {
         super.onCreate(savedInstanceState);
 
         kSOAPManager temp = new kSOAPManager();
-        temp.SearchMainRooms("PE");
+        temp.SearchRooms("PE");
 
         setContentView(R.layout.activity_splash);
 
