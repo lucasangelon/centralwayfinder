@@ -17,6 +17,15 @@ public class Campus {
         //Default construction
     }
 
+    public Campus(String CampusID, String CampusName, double CampusLong, double CampusLat, double CampusZoom)
+    {
+        campusID = CampusID;
+        campusName = CampusName;
+        campusLong = CampusLong;
+        campusLat = CampusLat;
+        campusZoom = CampusZoom;
+    }
+
     public String getCampusID() {
         return campusID;
     }
