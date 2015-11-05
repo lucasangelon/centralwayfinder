@@ -23,5 +23,7 @@
     <string name="cancel">Cancel</string>
     <string name="open_network_settings">Open Setting</string>
     <string name="title_activity_menu">MenuActivity</string>
-    <string name="title_activity_select_campus">SelectCampusActivity</string>>
+    <string name="title_activity_select_campus">SelectCampusActivity</string>
+    <string name="title_activity_search">SearchActivity</string>
+    <string name="title_activity_indoor_maps">IndoorMapsActivity</string>>
 </resources>

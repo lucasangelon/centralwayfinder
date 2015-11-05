@@ -1,6 +1,5 @@
 package codefactory.centralwayfinderproject.helpers;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -19,6 +18,7 @@ import org.ksoap2.transport.HttpTransportSE;
 import codefactory.centralwayfinderproject.R;
 import codefactory.centralwayfinderproject.dao.CampusDataSource;
 import codefactory.centralwayfinderproject.dao.RoomDataSource;
+import codefactory.centralwayfinderproject.database.HardCodeDB;
 import codefactory.centralwayfinderproject.models.Campus;
 import codefactory.centralwayfinderproject.models.Room;
 
@@ -32,30 +32,44 @@ public class WebServiceConnection {
     private final String NAMESPACE = "http://tempuri.org/"; //namespace is derived from the ?wsdl
     private final String URL = "http://student.mydesign.central.wa.edu.au/cf_Wayfinding_WebService/WF_Service.svc";
     private final String SOAP_ACTION = "http://tempuri.org/WF_Service_Interface/";
-    //check service conn
     private final String METHOD_CHECK_SERVICE_CONN = "checkServiceConn";
-    //also check db conn
     private final String METHOD_CHECK_DB_CONN = "checkDBConn";
-    //getCampus soap methods
     private final String METHOD_GET_CAMPUSES = "SearchCampus";
-    //getRoomsByCampus soap methods
     private final String METHOD_GET_ROOMS_BY_CAMPUS = "SearchRooms";
+    private final String METHOD_GET_SERVICE_BY_CAMPUS = "SearchMainRooms";
+    private final String METHOD_GET_BUILDING_BY_ROOM = "ResolvePath";
 
     boolean checkServiceResult;
     public FetchData  checkServiceConnAST;
 
     //Variables
     Context mContext;
-    int option_method;//1 - getCampusesFromWebService, 2 - getRoomsByCampusFromWebService
+    int option_method;
+    int roomId;
 
     /**
      * Create a instance of WebServiceConnection object
      * @param mContext
-     * @param option - Which method do you want to use in your AsyncTask (1 - getCampusesFromWebService, 2 - getRoomsByCampusFromWebService)
+     * @param option - Which method do you want to use in your AsyncTask
      */
     public WebServiceConnection(Context mContext,int option) {
         this.mContext = mContext;
         this.option_method = option;
+
+        //check web service connection and retrieve campus list (if connection available)
+        checkServiceConnAST = new FetchData ();
+    }
+
+    /**
+     * Create a instance of WebServiceConnection object
+     * @param mContext
+     * @param option - Which method do you want to use in your AsyncTask
+     * @param roomId - Which room you're looking for
+     */
+    public WebServiceConnection(Context mContext,int option, int roomId) {
+        this.mContext = mContext;
+        this.option_method = option;
+        this.roomId = roomId;
 
         //check web service connection and retrieve campus list (if connection available)
         checkServiceConnAST = new FetchData ();
@@ -67,7 +81,6 @@ public class WebServiceConnection {
         //Variables
         CampusDataSource campusDataSource;
         RoomDataSource roomDataSource;
-        //SharedPreferences prefs;
         Useful useful;
         Dialog dialog;
 
@@ -87,12 +100,20 @@ public class WebServiceConnection {
         @Override
         protected Void doInBackground(String... params) {
             if (checkServiceConn()){
+
+                HardCodeDB hardCodeDB = new HardCodeDB();
+
                 switch (option_method) {
                     case 1:
-                        getCampusesFromWebService();
+                        //getCampusesFromWebService();
+                        hardCodeDB.Search_Campus(mContext);
                         break;
                     case 2:
-                        getRoomsByCampusFromWebService();
+                        //getRoomsByCampusFromWebService();
+                        hardCodeDB.SearchRooms(mContext);
+                        break;
+                    case 3:
+                        getBuildingByRoomFromWebService();
                         break;
                 }
             }
@@ -159,12 +180,12 @@ public class WebServiceConnection {
                 SoapPrimitive response = (SoapPrimitive) envelope.getResponse();
                 //Assign response
                 checkServiceResult = Boolean.valueOf(response.toString());
-                Log.d("Soap action getDBconn:", "SUCCESS");
+                Log.d(METHOD_CHECK_SERVICE_CONN, "SUCCESS");
 
             } catch (Exception e) {
                 e.printStackTrace();
                 checkServiceResult = false;
-                Log.d("Soap action getDBconn:", "FAIL");
+                Log.d(METHOD_CHECK_SERVICE_CONN, "FAIL");
             }
 
             return checkServiceResult;
@@ -210,16 +231,70 @@ public class WebServiceConnection {
                     campusDataSource.insertCampus(campus);
                 }
 
-                 Log.d("Soap act. getCampuses:", "SUCCESS");
+                 Log.d(METHOD_GET_CAMPUSES, "SUCCESS");
 
             } catch (Exception e) {
                 e.printStackTrace();
-                Log.d("Soap act. getCampuses:", "FAIL");
+                Log.d(METHOD_GET_CAMPUSES, "FAIL");
             }
 
         }
 
-        @SuppressLint("LongLogTag")
+        public void getBuildingByRoomFromWebService() {
+            //Variables declaration
+            //Campus campus;
+            useful = new Useful(mContext);
+            //campus = useful.getDefaultCampus();
+
+            //Create request
+            SoapObject request = new SoapObject(NAMESPACE, METHOD_GET_BUILDING_BY_ROOM);
+
+            //Adding Room Id and Disability option as arguments
+            request.addProperty("WaypointID",roomId);
+            request.addProperty("Disability",useful.getAccessibilityOption());
+
+            //Create envelope
+            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
+                    SoapEnvelope.VER11);
+            envelope.dotNet = true;
+            //Set output SOAP object
+            envelope.setOutputSoapObject(request);
+            //Create HTTP call object
+            HttpTransportSE androidHttpTransport = new HttpTransportSE(URL);
+
+            try {
+                //Invoke web service
+                androidHttpTransport.call(SOAP_ACTION + METHOD_GET_BUILDING_BY_ROOM, envelope);
+                //Get the response
+                SoapObject response = (SoapObject) envelope.bodyIn;
+                //get the array of campus objects
+                SoapObject responseTierOne = (SoapObject) response.getProperty(0);
+                //for each object in that array
+
+                for (int i = 0; i<responseTierOne.getPropertyCount(); i++){
+                    //parse into a soap object
+                    SoapObject responseTierTwo = (SoapObject)responseTierOne.getProperty(i);
+                    Room room = new Room();
+
+                    //and pull out the fields
+                    room.setRoomID(Integer.parseInt(responseTierTwo.getPropertyAsString(0)));
+                    room.setRoomName(responseTierTwo.getPropertyAsString(1));
+
+                    //Save room in the local database
+                    roomDataSource = new RoomDataSource(mContext);
+                    roomDataSource.insertRoom(room);
+
+                }
+
+                Log.d(METHOD_GET_BUILDING_BY_ROOM, "SUCCESS");
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.d(METHOD_GET_BUILDING_BY_ROOM, "FAIL");
+            }
+
+        }
+
         public void getRoomsByCampusFromWebService() {
             //Variables declaration
             Campus campus;
@@ -265,14 +340,13 @@ public class WebServiceConnection {
 
                 }
 
-                Log.d("Soap_getRoomsByCampuses:", "SUCCESS");
+                Log.d(METHOD_GET_ROOMS_BY_CAMPUS, "SUCCESS");
 
             } catch (Exception e) {
                 e.printStackTrace();
-                Log.d("Soap_getRoomsByCampuses:", "FAIL");
+                Log.d(METHOD_GET_ROOMS_BY_CAMPUS, "FAIL");
             }
 
         }
-
     }
 }

@@ -2,8 +2,11 @@ package codefactory.centralwayfinderproject.dao;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+
+import java.util.ArrayList;
 
 import codefactory.centralwayfinderproject.database.MySQLiteHelper;
 import codefactory.centralwayfinderproject.models.Room;
@@ -26,7 +29,7 @@ public class RoomDataSource {
     }
 
     /**
-     * Save room object on the table Room
+     * Save room object on table Room
      */
     public void insertRoom(Room objRoom){
         database = dbHelper.getWritableDatabase();
@@ -40,5 +43,28 @@ public class RoomDataSource {
         Log.d("INSERT ROOM",objRoom.toString());
         close();
 
+    }
+
+    /**
+     * Get all elements from Room table
+     */
+    public ArrayList<Room> getAllRooms(){
+        ArrayList<Room> allRooms = new ArrayList<>();
+        database = dbHelper.getReadableDatabase();
+
+        Cursor res = database.rawQuery(dbHelper.SQL_SELECT_TABLE_ROOM,null);
+        res.moveToFirst();
+
+        while (res.isAfterLast()==false){
+            Room room = new Room();
+            room.setRoomID(res.getInt(res.getColumnIndex(dbHelper.COLUMN_ROOM_ID)));
+            room.setRoomName(res.getString(res.getColumnIndex(dbHelper.COLUMN_ROOM_NAME)));
+
+            allRooms.add(room);
+            res.moveToNext();
+        }
+
+        close();
+        return allRooms;
     }
 }

@@ -46,6 +46,7 @@ public class CampusDataSource {
         //database.execSQL("INSERT INTO campus(CampusLong,CampusLat,CampusName,CampusZoom,CampusID) VALUES ("+objCampus.getCampusLong()+","+objCampus.getCampusLat()+",'"+objCampus.getCampusName()+"',"+objCampus.getCampusZoom()+",'"+objCampus.getCampusID()+"')");
         database.insert(dbHelper.TABLE_CAMPUS, null, values);
         Log.d("INSERT CAMPUS" ,objCampus.toString());
+        close();
 
     }
 
@@ -70,7 +71,7 @@ public class CampusDataSource {
             allCampus.add(campus);
             res.moveToNext();
         }
-
+        close();
         return allCampus;
     }
 

@@ -13,6 +13,11 @@ public class Room {
         //Default construction
     }
 
+    public Room(int roomID, String roomName) {
+        this.roomID = roomID;
+        this.roomName = roomName;
+    }
+
     public int getRoomID() {
         return roomID;
     }
