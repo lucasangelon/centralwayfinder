@@ -29,7 +29,8 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:textSize="25dp"
-        android:linksClickable="true"/>
+        android:clickable="true"
+        android:onClick="handleOnClick"/>
 
     <TextView
         android:layout_width="225dp"
@@ -41,7 +42,8 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:textSize="25dp"
-        android:linksClickable="true"/>
+        android:clickable="true"
+        android:onClick="handleOnClick"/>
 
     <TextView
         android:layout_width="225dp"
@@ -51,21 +53,23 @@
         android:id="@+id/txt_Terms"
         android:layout_alignParentStart="true"
         android:textSize="25dp"
-        android:layout_below="@+id/textView7"
+        android:layout_below="@+id/txt_Policy"
         android:layout_alignParentLeft="true"
-        android:linksClickable="true"/>
+        android:clickable="true"
+        android:onClick="handleOnClick"/>
 
     <TextView
         android:layout_width="225dp"
         android:layout_height="35dp"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Privacy Policy"
-        android:id="@+id/textView7"
+        android:id="@+id/txt_Policy"
         android:textSize="25dp"
         android:layout_below="@+id/txt_About"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:linksClickable="true"/>
+        android:clickable="true"
+        android:onClick="handleOnClick"/>
 
     <Switch
         android:layout_width="80dp"

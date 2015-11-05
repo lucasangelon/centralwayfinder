@@ -1,21 +1,18 @@
 package codefactory.centralwayfinderproject.activites;
 
-import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.TextView;
 
 import codefactory.centralwayfinderproject.R;
 
-public class SettingsActivity extends ActionBarActivity {
+public class AboutActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_settings);
+        setContentView(R.layout.activity_about);
     }
 
     @Override
@@ -38,34 +35,5 @@ public class SettingsActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    public void handleOnClick(View view)
-    {
-        switch(view.getId()) {
-            case R.id.txt_About:
-                Intent intent = new Intent(this, AboutActivity.class);
-                startActivity(intent);
-
-                break;
-
-            case R.id.txt_Campus:
-                intent = new Intent(this, SelectCampusActivity.class);
-                startActivity(intent);
-
-                break;
-
-            case R.id.txt_Policy:
-                intent = new Intent(this, CopyrightActivity.class);
-                startActivity(intent);
-
-                break;
-
-            case R.id.txt_Terms:
-                intent = new Intent(this, TermsActivity.class);
-                startActivity(intent);
-
-                break;
-        }
     }
 }

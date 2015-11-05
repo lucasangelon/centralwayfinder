@@ -24,5 +24,7 @@
     <string name="open_network_settings">Open Setting</string>
     <string name="title_activity_menu">MenuActivity</string>
     <string name="title_activity_select_campus">SelectCampusActivity</string>
-    <string name="title_activity_settings">SettingsActivity</string>>
+    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="title_activity_about">AboutActivity</string>
+    <string name="title_activity_terms">TermsActivity</string>>
 </resources>
