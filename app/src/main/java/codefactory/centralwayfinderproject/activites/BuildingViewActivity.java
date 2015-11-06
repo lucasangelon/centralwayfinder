@@ -12,7 +12,6 @@ import android.widget.Button;
 import android.widget.Toast;
 
 
-import codefactory.centralwayfinderproject.IndoorMapsActivity;
 import codefactory.centralwayfinderproject.R;
 
 public class BuildingViewActivity extends ActionBarActivity implements View.OnClickListener {

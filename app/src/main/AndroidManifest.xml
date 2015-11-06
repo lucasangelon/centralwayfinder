@@ -59,7 +59,7 @@
             android:label="@string/title_activity_search" >
         </activity>
         <activity
-            android:name=".IndoorMapsActivity"
+            android:name=".activites.IndoorMapsActivity"
             android:label="@string/title_activity_indoor_maps" >
         </activity>
     </application>
