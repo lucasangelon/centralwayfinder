@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 
+import codefactory.centralwayfinderproject.IndoorMapsActivity;
 import codefactory.centralwayfinderproject.R;
 
 public class BuildingViewActivity extends ActionBarActivity implements View.OnClickListener {
@@ -80,7 +81,7 @@ public class BuildingViewActivity extends ActionBarActivity implements View.OnCl
         switch (v.getId()) {
             case R.id.btnLocation:
                 //Go to Search Activity
-                Intent intent = new Intent(this, GoogleMapActivity.class);
+                Intent intent = new Intent(this, IndoorMapsActivity.class);
                 startActivity(intent);
 
                 break;

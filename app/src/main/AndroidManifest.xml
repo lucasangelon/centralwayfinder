@@ -58,6 +58,10 @@
             android:name=".activites.SettingsActivity"
             android:label="@string/title_activity_settings" >
         </activity>
+        <activity
+            android:name=".IndoorMapsActivity"
+            android:label="@string/title_activity_indoor_maps" >
+        </activity>
     </application>
 
 </manifest>

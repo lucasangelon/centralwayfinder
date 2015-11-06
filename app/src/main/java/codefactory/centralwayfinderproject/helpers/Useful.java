@@ -79,4 +79,27 @@ public class Useful extends Application {
         prefs.edit().putLong("campusLat", Double.doubleToLongBits(defaultCampus.getCampusLat())).commit();
         prefs.edit().putLong("campusZoom", Double.doubleToLongBits(defaultCampus.getCampusZoom())).commit();
     }
+
+    /**
+     * Method which get accessibility option at preference file "setting"
+     * @return boolean
+     */
+    public boolean getAccessibilityOption(){
+        boolean result;
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+
+        result =  prefs.getBoolean("accessibility",false);
+
+        return result;
+    }
+
+    /**
+     * Method which set accessibility option at preference file "setting"
+     * @param value
+     */
+    public void setAccessibilityOption(boolean value){
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+
+        prefs.edit().putBoolean("accessibility", value).commit();
+    }
 }

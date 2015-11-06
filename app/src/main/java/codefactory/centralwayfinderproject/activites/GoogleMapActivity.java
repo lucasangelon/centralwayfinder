@@ -1,9 +1,8 @@
 package codefactory.centralwayfinderproject.activites;
 
-import android.content.SharedPreferences;
+import android.content.Intent;
 import android.graphics.Color;
 import android.location.Address;
-import android.location.Geocoder;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -11,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -22,24 +22,28 @@ import com.google.android.gms.maps.model.PolylineOptions;
 
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import codefactory.centralwayfinderproject.R;
-import codefactory.centralwayfinderproject.dao.CampusDataSource;
+import codefactory.centralwayfinderproject.dao.RoomDataSource;
+import codefactory.centralwayfinderproject.database.HardCodeDB;
 import codefactory.centralwayfinderproject.helpers.HttpConnection;
 import codefactory.centralwayfinderproject.helpers.PathJSONParser;
 import codefactory.centralwayfinderproject.helpers.Useful;
+import codefactory.centralwayfinderproject.models.Building;
 import codefactory.centralwayfinderproject.models.Campus;
+import codefactory.centralwayfinderproject.models.Room;
 
 /**
  * Created by Gustavo on 21/09/2015.
  */
 public class GoogleMapActivity extends FragmentActivity {
 
-    private LatLng startLocation, endLocation;
+    private LatLng startLocation;
+    private LatLng endLocation;
+    private Float defaultZoom = 15.0f;
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private final static String MODE_DRIVING = "driving";
     private final static String MODE_WALKING = "walking";
@@ -47,18 +51,16 @@ public class GoogleMapActivity extends FragmentActivity {
     private Campus startPoint;
     private Useful util;
 
-    private CampusDataSource dataSource;
-    private SharedPreferences prefs;
-    private String defaultCampus;
+    private Building building;
 
     @Override
-    @SuppressWarnings("ResourceType")
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_google_map);
 
         startPoint = new Campus();
         util = new Useful(this);
+
         /*
         * Check if the gps is ON or OFF
         * In case ON: Use current location as start point
@@ -106,7 +108,7 @@ public class GoogleMapActivity extends FragmentActivity {
     private void setUpMap() {
 
         mMap.addMarker(new MarkerOptions().position(startLocation).title(startPoint.getCampusName()));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(startLocation,Float.parseFloat(Double.toString(startPoint.getCampusZoom()))));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(startLocation, Float.parseFloat(Double.toString(startPoint.getCampusZoom()))));
         mMap.setMyLocationEnabled(false);
     }
 
@@ -121,6 +123,66 @@ public class GoogleMapActivity extends FragmentActivity {
 
         //Check if destination is null or empty
         if (destination != null || !destination.equals("")) {
+
+            /** New solution using webservice and database*/
+            if (searchForRoom(destination)){
+                endLocation = new LatLng(-31.94760d, 115.86121d);
+                //endLocation = new LatLng(building.getBuildingLat(),building.getBuildingLong());
+
+                //Search for the route
+                String url = getMapsApiDirectionsUrl(startLocation, endLocation, MODE_DRIVING);
+                ReadTask downloadTask = new ReadTask();
+                downloadTask.execute(url);
+
+                //Re-call the map with the new location
+                customAddMarker(endLocation, destination, destination);
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(endLocation, defaultZoom));
+                mMap.setMyLocationEnabled(false);
+
+                // Display popup on which point
+                mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                    @Override
+                    public void onInfoWindowClick(Marker marker) {
+                        //Go to BuildingView
+                        Intent intent = new Intent(getApplicationContext(), BuildingViewActivity.class);
+                        startActivity(intent);
+                      Toast.makeText(getApplicationContext(), "Requested Send", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+
+                    @Override
+                    public View getInfoWindow(Marker marker) {
+                        return null;
+                    }
+
+                    @Override
+                    public View getInfoContents(Marker marker) {
+
+                        View v = null;
+
+                        if (!marker.getPosition().equals(startLocation)) {
+                            // Getting view from the layout file
+                            v = getLayoutInflater().inflate(R.layout.googlemaps_popup, null);
+
+                            //
+                            TextView title = (TextView) v.findViewById(R.id.txt_Title);
+                            title.setText(building.getBuildingTitle() + "\n" + building.getBuildingAddress());
+                            marker.getPosition();
+                        }
+
+                        return v;
+                    }
+                });
+
+            } else{
+
+                Toast.makeText(this,"Room is unavailable or not in this Campus",Toast.LENGTH_SHORT).show();
+            }
+
+
+            /*Old code
             Geocoder geocoder = new Geocoder(this);
             try {
                 //Using Geocoder's object to transform string in geolocation
@@ -140,10 +202,10 @@ public class GoogleMapActivity extends FragmentActivity {
 
             //Re-call the map with the new location
             customAddMarker(endLocation, destination, destination);
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(endLocation, Float.parseFloat(Double.toString(startPoint.getCampusZoom()))));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(endLocation, defaultZoom));
             mMap.setMyLocationEnabled(false);
 
-            /// Teste
+            // Display popup on which point
             mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
 
                 @Override
@@ -154,19 +216,45 @@ public class GoogleMapActivity extends FragmentActivity {
                 @Override
                 public View getInfoContents(Marker marker) {
 
-                    // Getting view from the layout file
-                    View v = getLayoutInflater().inflate(R.layout.googlemaps_popup, null);
+                    View v = null;
 
-                    TextView title = (TextView) v.findViewById(R.id.txt_Title);
-                    title.setText(marker.getSnippet());
+                    if(!marker.getPosition().equals(startLocation)){
+                        // Getting view from the layout file
+                        v = getLayoutInflater().inflate(R.layout.googlemaps_popup, null);
+
+                        TextView title = (TextView) v.findViewById(R.id.txt_Title);
+                        title.setText(marker.getSnippet());
+                        marker.getPosition();
+                    }
 
                     return v;
                 }
 
             });
+            */
         }
     }
 
+    public boolean searchForRoom(String room){
+        RoomDataSource roomDataSource = new RoomDataSource(this);
+        ArrayList<Room> roomList;
+
+        roomList = roomDataSource.getAllRooms();
+
+        for(int index = 0; index < roomList.size(); index++){
+            if (roomList.get(index).getRoomName().equalsIgnoreCase(room)) {
+
+                //WebServiceConnection webServiceConnection = new WebServiceConnection(this,3,roomList.get(index).getRoomID());
+                //webServiceConnection.checkServiceConnAST.execute();
+
+                HardCodeDB hardCodeDB = new HardCodeDB();
+                building = hardCodeDB.ResolvePath(roomList.get(index).getRoomID(),false);
+                return true;
+            }
+        }
+        return false;
+
+    }
 
     public void customAddMarker(LatLng latLng, String title, String snippet) {
         MarkerOptions options = new MarkerOptions();
