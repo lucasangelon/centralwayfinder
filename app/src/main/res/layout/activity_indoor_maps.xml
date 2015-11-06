@@ -4,9 +4,46 @@
     android:layout_height="fill_parent"
     android:gravity="top"
     android:orientation="vertical"
-    tools:context="codefactory.centralwayfinderproject.IndoorMapsActivity">
+    tools:context="codefactory.centralwayfinderproject.activites.IndoorMapsActivity">
 
-    <ScrollView
+    <codefactory.centralwayfinderproject.helpers.MultiTouch
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/mapMultiTouch"
+        android:layout_alignParentTop="true" />
+
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/nextPanel"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Back"
+            android:onClick="imageBack"
+            android:id="@+id/buttonBack"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Next"
+            android:onClick="imageFwd"
+            android:id="@+id/buttonNext"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+
+    </RelativeLayout>
+
+    <!--<ScrollView
         android:id="@+id/scrollView1"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
@@ -28,6 +65,6 @@
 
             </LinearLayout>
         </HorizontalScrollView>
-    </ScrollView>
+    </ScrollView>-->
 
 </LinearLayout>
