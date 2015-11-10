@@ -47,14 +47,16 @@ public class SelectCampusActivity extends AppCompatActivity{
         dataSource = new CampusDataSource(this);
         campusesList = dataSource.getAllCampus();
 
+        //Populating arrayList with campus' name
         for (int x = 0; x < campusesList.size(); x++){
             campusNames.add(campusesList.get(x).getCampusName());
         }
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, campusNames);
-
         listViewCampus.setAdapter(adapter);
+
+        //Getting the list item selected
         listViewCampus.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapter, View v, int position, long arg3) {
@@ -67,8 +69,11 @@ public class SelectCampusActivity extends AppCompatActivity{
                 useful = new Useful(getApplicationContext());
                 useful.setDefaultCampus(campusesList.get(position));
 
-                //Gets rooms from WebService and save on the database
+                //Getting rooms from WebService and save on the database
                 getRoomOnWebService();
+
+                //Getting services from WebService and save on the database
+                getServicesOnWebService();
 
                 //Go to Menu Activity
                 Intent intent = new Intent(v.getContext(), MenuActivity.class);
@@ -83,6 +88,16 @@ public class SelectCampusActivity extends AppCompatActivity{
     public void getRoomOnWebService(){
 
         webServiceConnection = new WebServiceConnection(this,2);
+        webServiceConnection.checkServiceConnAST.execute();
+
+    }
+
+    /**
+     * Getting Services by Campus from WebService and saving those room in the local database
+     */
+    public void getServicesOnWebService(){
+
+        webServiceConnection = new WebServiceConnection(this,4);
         webServiceConnection.checkServiceConnAST.execute();
 
     }

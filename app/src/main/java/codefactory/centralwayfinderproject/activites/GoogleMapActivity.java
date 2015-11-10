@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -107,7 +108,11 @@ public class GoogleMapActivity extends FragmentActivity {
      */
     private void setUpMap() {
 
-        mMap.addMarker(new MarkerOptions().position(startLocation).title(startPoint.getCampusName()));
+        mMap.addMarker(
+                new MarkerOptions()
+                        .position(startLocation)
+                        .title(startPoint.getCampusName())
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(startLocation, Float.parseFloat(Double.toString(startPoint.getCampusZoom()))));
         mMap.setMyLocationEnabled(false);
     }
@@ -258,7 +263,11 @@ public class GoogleMapActivity extends FragmentActivity {
 
     public void customAddMarker(LatLng latLng, String title, String snippet) {
         MarkerOptions options = new MarkerOptions();
-        options.position(latLng).title(title).snippet(snippet).draggable(true);
+        options.position(latLng)
+                .title(title)
+                .snippet(snippet)
+                .draggable(true)
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
         mMap.addMarker(options);
     }
 

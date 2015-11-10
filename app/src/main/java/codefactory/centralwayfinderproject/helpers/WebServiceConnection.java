@@ -36,7 +36,7 @@ public class WebServiceConnection {
     private final String METHOD_CHECK_DB_CONN = "checkDBConn";
     private final String METHOD_GET_CAMPUSES = "SearchCampus";
     private final String METHOD_GET_ROOMS_BY_CAMPUS = "SearchRooms";
-    private final String METHOD_GET_SERVICE_BY_CAMPUS = "SearchMainRooms";
+    private final String METHOD_GET_SERVICE_BY_CAMPUS = "SearchServices";
     private final String METHOD_GET_BUILDING_BY_ROOM = "ResolvePath";
 
     boolean checkServiceResult;
@@ -105,15 +105,18 @@ public class WebServiceConnection {
 
                 switch (option_method) {
                     case 1:
-                        //getCampusesFromWebService();
-                        hardCodeDB.Search_Campus(mContext);
+                        getCampusesFromWebService();
+                        //hardCodeDB.Search_Campus(mContext);
                         break;
                     case 2:
-                        //getRoomsByCampusFromWebService();
-                        hardCodeDB.SearchRooms(mContext);
+                        getRoomsByCampusFromWebService();
+                        //hardCodeDB.SearchRooms(mContext);
                         break;
                     case 3:
                         getBuildingByRoomFromWebService();
+                        break;
+                    case 4:
+                        getServicesByCampusFromWebService();
                         break;
                 }
             }
@@ -221,10 +224,10 @@ public class WebServiceConnection {
 
                     //and pull out the fields
                     campus.setCampusID(responseTierTwo.getPropertyAsString(0));
-                    campus.setCampusName(responseTierTwo.getPropertyAsString(3));
-                    campus.setCampusLong(Double.parseDouble(responseTierTwo.getProperty(2).toString()));
-                    campus.setCampusLat(Double.parseDouble(responseTierTwo.getProperty(1).toString()));
-                    campus.setCampusZoom(Double.parseDouble(responseTierTwo.getProperty(4).toString()));
+                    campus.setCampusName(responseTierTwo.getPropertyAsString(1));
+                    campus.setCampusLong(Double.parseDouble(responseTierTwo.getPropertyAsString(3)));
+                    campus.setCampusLat(Double.parseDouble(responseTierTwo.getPropertyAsString(2)));
+                    campus.setCampusZoom(Double.parseDouble(responseTierTwo.getPropertyAsString(4)));
 
                     //Save campus on the local database
                     campusDataSource = new CampusDataSource(mContext);
@@ -345,6 +348,60 @@ public class WebServiceConnection {
             } catch (Exception e) {
                 e.printStackTrace();
                 Log.d(METHOD_GET_ROOMS_BY_CAMPUS, "FAIL");
+            }
+
+        }
+
+        public void getServicesByCampusFromWebService() {
+            //Variables declaration
+            Campus campus;
+            useful = new Useful(mContext);
+            campus = useful.getDefaultCampus();
+
+            //Create request
+            SoapObject request = new SoapObject(NAMESPACE, METHOD_GET_SERVICE_BY_CAMPUS);
+
+            //Adding Campus Id as an argument at request object
+            request.addProperty("CampusID",campus.getCampusID());
+
+            //Create envelope
+            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
+                    SoapEnvelope.VER11);
+            envelope.dotNet = true;
+            //Set output SOAP object
+            envelope.setOutputSoapObject(request);
+            //Create HTTP call object
+            HttpTransportSE androidHttpTransport = new HttpTransportSE(URL);
+
+            try {
+                //Invoke web service
+                androidHttpTransport.call(SOAP_ACTION + METHOD_GET_SERVICE_BY_CAMPUS, envelope);
+                //Get the response
+                SoapObject response = (SoapObject) envelope.bodyIn;
+                //get the array of campus objects
+                SoapObject responseTierOne = (SoapObject) response.getProperty(0);
+                //for each object in that array
+
+                for (int i = 0; i<responseTierOne.getPropertyCount(); i++){
+                    //parse into a soap object
+                    SoapObject responseTierTwo = (SoapObject)responseTierOne.getProperty(i);
+                    Room room = new Room();
+
+                    //and pull out the fields
+                    room.setRoomID(Integer.parseInt(responseTierTwo.getPropertyAsString(0)));
+                    room.setRoomName(responseTierTwo.getPropertyAsString(1));
+
+                    //Save room in the local database
+                    roomDataSource = new RoomDataSource(mContext);
+                    roomDataSource.insertRoom(room);
+
+                }
+
+                Log.d(METHOD_GET_SERVICE_BY_CAMPUS, "SUCCESS");
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.d(METHOD_GET_SERVICE_BY_CAMPUS, "FAIL");
             }
 
         }

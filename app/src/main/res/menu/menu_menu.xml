@@ -18,12 +18,12 @@
         android:id="@+id/action_icon3"
         android:orderInCategory="3"
         android:title="CentralWebsite"
-        android:icon="@mipmap/ic_home"
+        android:icon="@mipmap/ic_central_web"
         app:showAsAction="always"></item>
     <item
         android:id="@+id/action_icon4"
         android:orderInCategory="4"
         android:title="Search2"
-        android:icon="@mipmap/ic_home"
+        android:icon="@mipmap/ic_settings"
         app:showAsAction="always"></item>
 </menu>

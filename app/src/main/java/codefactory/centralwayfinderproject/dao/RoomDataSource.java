@@ -67,4 +67,28 @@ public class RoomDataSource {
         close();
         return allRooms;
     }
+
+    /**
+     * Get all elements from Room table
+     */
+    public ArrayList<Room> getServices(){
+        ArrayList<Room> serviceList = new ArrayList<>();
+        database = dbHelper.getReadableDatabase();
+
+        /* NEED TO CHANGE SQL QUERY */
+        Cursor res = database.rawQuery(dbHelper.SQL_SELECT_TABLE_ROOM,null);
+        res.moveToFirst();
+
+        while (res.isAfterLast()==false){
+            Room room = new Room();
+            room.setRoomID(res.getInt(res.getColumnIndex(dbHelper.COLUMN_ROOM_ID)));
+            room.setRoomName(res.getString(res.getColumnIndex(dbHelper.COLUMN_ROOM_NAME)));
+
+            serviceList.add(room);
+            res.moveToNext();
+        }
+
+        close();
+        return serviceList;
+    }
 }

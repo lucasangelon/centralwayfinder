@@ -28,4 +28,5 @@
     <string name="title_activity_about">AboutActivity</string>
     <string name="title_activity_terms">TermsActivity</string>
     <string name="title_activity_indoor_maps">IndoorMapsActivity</string>
+    <string name="title_activity_service">ServiceActivity</string>
 </resources>

@@ -7,19 +7,21 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.Toast;
+import android.widget.ImageButton;
 
 import codefactory.centralwayfinderproject.R;
 
 public class MenuActivity extends Activity implements OnClickListener {
 
     Button btn_button1, btn_button2, btn_button3, btn_button4;
+    ImageButton btnImg_search;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
 
+        btnImg_search = (ImageButton) findViewById(R.id.btnSearch);
         btn_button1 = (Button) findViewById(R.id.button1);
         btn_button2 = (Button) findViewById(R.id.button2);
         btn_button3 = (Button) findViewById(R.id.button3);
@@ -41,7 +43,7 @@ public class MenuActivity extends Activity implements OnClickListener {
 
                 break;
             case R.id.button2:
-                intent = new Intent(this, SelectCampusActivity.class);
+                intent = new Intent(this, ServiceActivity.class);
                 startActivity(intent);
 
                 break;
