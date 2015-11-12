@@ -8,6 +8,8 @@ public class Room {
     //Variables
     private int roomID;
     private String roomName;
+    private int buildingID;
+    private String roomImage;
 
     public Room() {
         //Default construction
@@ -34,11 +36,29 @@ public class Room {
         this.roomName = roomName;
     }
 
+    public int getBuildingID() {
+        return buildingID;
+    }
+
+    public void setBuildingID(int buildingID) {
+        this.buildingID = buildingID;
+    }
+
+    public String getRoomImage() {
+        return roomImage;
+    }
+
+    public void setRoomImage(String roomImage) {
+        this.roomImage = roomImage;
+    }
+
     @Override
     public String toString() {
         return "Room{" +
                 "roomID=" + roomID +
                 ", roomName='" + roomName + '\'' +
+                ", buildingID=" + buildingID +
+                ", roomImage='" + roomImage + '\'' +
                 '}';
     }
 }

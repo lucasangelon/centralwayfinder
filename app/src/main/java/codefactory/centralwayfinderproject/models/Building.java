@@ -5,64 +5,63 @@ package codefactory.centralwayfinderproject.models;
  */
 public class Building {
 
-    private double buildingLong;
-    private double buildingLat;
-    private String buildingTitle;
-    private String buildingAddress;
-    private int buildingID;
+    private int id;
+    private String image;
+    private double longitude;
+    private double latitude;
+    private String name;
     private String campusID;
 
     public Building() {
 
     }
 
-    public Building(double buildingLong, double buildingLat, String buildingTitle, String buildingAddress, int buildingID, String campusID) {
-        this.buildingLong = buildingLong;
-        this.buildingLat = buildingLat;
-        this.buildingTitle = buildingTitle;
-        this.buildingAddress = buildingAddress;
-        this.buildingID = buildingID;
+    public Building(double longitude, double latitude, String name, String address, int id, String campusID) {
+        this.longitude = longitude;
+        this.latitude = latitude;
+        this.name = name;
+        this.id = id;
         this.campusID = campusID;
     }
 
-    public double getBuildingLong() {
-        return buildingLong;
+    public String getImage() {
+        return image;
     }
 
-    public void setBuildingLong(double buildingLong) {
-        this.buildingLong = buildingLong;
+    public void setImage(String image) {
+        this.image = image;
     }
 
-    public double getBuildingLat() {
-        return buildingLat;
+    public double getLongitude() {
+        return longitude;
     }
 
-    public void setBuildingLat(double buildingLat) {
-        this.buildingLat = buildingLat;
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 
-    public String getBuildingTitle() {
-        return buildingTitle;
+    public double getLatitude() {
+        return latitude;
     }
 
-    public void setBuildingTitle(String buildingTitle) {
-        this.buildingTitle = buildingTitle;
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
     }
 
-    public String getBuildingAddress() {
-        return buildingAddress;
+    public String getName() {
+        return name;
     }
 
-    public void setBuildingAddress(String buildingAddress) {
-        this.buildingAddress = buildingAddress;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public int getBuildingID() {
-        return buildingID;
+    public int getId() {
+        return id;
     }
 
-    public void setBuildingID(int buildingID) {
-        this.buildingID = buildingID;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getCampusID() {
@@ -71,5 +70,17 @@ public class Building {
 
     public void setCampusID(String campusID) {
         this.campusID = campusID;
+    }
+
+    @Override
+    public String toString() {
+        return "Building{" +
+                "id=" + id +
+                ", image='" + image + '\'' +
+                ", longitude=" + longitude +
+                ", latitude=" + latitude +
+                ", name='" + name + '\'' +
+                ", campusID='" + campusID + '\'' +
+                '}';
     }
 }

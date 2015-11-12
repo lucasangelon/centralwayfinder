@@ -16,18 +16,28 @@
         android:maxWidth="400dp"
         android:minHeight="200dp"
         android:minWidth="400dp"
-        android:background="#ffffab29" />
+        android:background="#ffffab29"
+        android:layout_marginBottom="30dp" />
 
-    <Button
-        android:layout_width="400dp"
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="MAPS"
-        android:id="@+id/button1"
-        android:layout_gravity="start"
-        android:gravity="start"
-        android:layout_centerVertical="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_below="@+id/imageView"
+        android:id="@+id/searchOption"
+        android:background="#e2e2e2">
+
+        <EditText
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/txtSearch"/>
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnSearch"
+            android:background="@mipmap/ic_search"/>
+    </LinearLayout>
 
     <Button
         android:layout_width="400dp"
@@ -36,7 +46,7 @@
         android:id="@+id/button2"
         android:layout_gravity="start"
         android:gravity="start"
-        android:layout_below="@+id/button1"
+        android:layout_below="@+id/searchOption"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
@@ -60,25 +70,5 @@
         android:gravity="start"
         android:layout_below="@+id/button3"
         android:layout_centerHorizontal="true" />
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/button4"
-        android:background="#00000000">
-
-        <EditText
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/txtAddress"/>
-
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/btnSearch"
-            android:background="@mipmap/ic_search"
-            android:onClick="onSearch"/>
-    </LinearLayout>
 
 </RelativeLayout>

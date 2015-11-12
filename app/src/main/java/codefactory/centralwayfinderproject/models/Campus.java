@@ -9,6 +9,7 @@ public class Campus {
     //Variables
     private String campusID;
     private String campusName;
+    private String campusVersion;
     private double campusLong;
     private double campusLat;
     private double campusZoom;
@@ -41,6 +42,14 @@ public class Campus {
         this.campusName = campusName;
     }
 
+    public String getCampusVersion() {
+        return campusVersion;
+    }
+
+    public void setCampusVersion(String campusVersion) {
+        this.campusVersion = campusVersion;
+    }
+
     public double getCampusLong() {
         return campusLong;
     }
@@ -70,6 +79,7 @@ public class Campus {
         return "Campus{" +
                 "campusID='" + campusID + '\'' +
                 ", campusName='" + campusName + '\'' +
+                ", campusVersion='" + campusVersion + '\'' +
                 ", campusLong=" + campusLong +
                 ", campusLat=" + campusLat +
                 ", campusZoom=" + campusZoom +

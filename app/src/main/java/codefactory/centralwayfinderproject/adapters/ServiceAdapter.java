@@ -79,8 +79,8 @@ public class ServiceAdapter extends BaseAdapter {
         viewHolder.text.setText(serviceList.get(position).getRoomName());
 
         //CHANGE TO CHECK IMAGE NAME INSTEAD OF NAME
-        switch (serviceList.get(position).getRoomName()){
-            case "Cafe":
+        switch (serviceList.get(position).getRoomImage()){
+            case "Ca":
                 viewHolder.icon.setImageResource(R.mipmap.ic_cafe);
                 break;
             case "Gym":

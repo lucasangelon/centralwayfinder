@@ -7,13 +7,20 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 
+import java.util.ArrayList;
+
 import codefactory.centralwayfinderproject.R;
+import codefactory.centralwayfinderproject.dao.RoomDataSource;
+import codefactory.centralwayfinderproject.database.HardCodeDB;
+import codefactory.centralwayfinderproject.models.Building;
+import codefactory.centralwayfinderproject.models.Room;
 
 public class MenuActivity extends Activity implements OnClickListener {
 
-    Button btn_button1, btn_button2, btn_button3, btn_button4;
+    Button btn_services, btn_centralWeb, btn_settings;
     ImageButton btnImg_search;
 
     @Override
@@ -22,24 +29,27 @@ public class MenuActivity extends Activity implements OnClickListener {
         setContentView(R.layout.activity_menu);
 
         btnImg_search = (ImageButton) findViewById(R.id.btnSearch);
-        btn_button1 = (Button) findViewById(R.id.button1);
-        btn_button2 = (Button) findViewById(R.id.button2);
-        btn_button3 = (Button) findViewById(R.id.button3);
-        btn_button4 = (Button) findViewById(R.id.button4);
+        btn_services = (Button) findViewById(R.id.button2);
+        btn_centralWeb = (Button) findViewById(R.id.button3);
+        btn_settings = (Button) findViewById(R.id.button4);
 
-        btn_button1.setOnClickListener(this);
-        btn_button2.setOnClickListener(this);
-        btn_button3.setOnClickListener(this);
-        btn_button4.setOnClickListener(this);
+        btnImg_search.setOnClickListener(this);
+        btn_services.setOnClickListener(this);
+        btn_centralWeb.setOnClickListener(this);
+        btn_settings.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
+        Intent intent;
         switch (v.getId()) {
-            case R.id.button1:
-                //Go to Search Activity
-                Intent intent = new Intent(this, GoogleMapActivity.class);
-                startActivity(intent);
+            case R.id.btnSearch:
+                if(true) {
+                    intent = new Intent(this, GoogleMapActivity.class);
+                    startActivity(intent);
+                }else{
+                    displayMessager();
+                }
 
                 break;
             case R.id.button2:
@@ -48,7 +58,7 @@ public class MenuActivity extends Activity implements OnClickListener {
 
                 break;
             case R.id.button3:
-                Uri uri = Uri.parse("http://central.wa.edu.au/Pages/default.aspx"); // missing 'http://' will cause crash
+                Uri uri = Uri.parse("http://central.wa.edu.au/Pages/default.aspx");
                 intent = new Intent(Intent.ACTION_VIEW, uri);
                 startActivity(intent);
 
@@ -62,4 +72,56 @@ public class MenuActivity extends Activity implements OnClickListener {
         }
 
     }
+
+    private void displayMessager() {
+    }
+
+    /**
+     * Method to search destination place input
+     */
+    public boolean searchRoom() {
+        boolean result = false;
+        EditText txtSearch = (EditText) findViewById(R.id.txtSearch);
+        String destination = txtSearch.getText().toString();
+        isAvailableRoom(destination);
+
+        return result;
+
+    }
+
+    /**
+     * Verify if the user input is a valid room or not
+     * if YES - get building details
+     * if NO - Display messager
+     */
+    private boolean isAvailableRoom(String room){
+        RoomDataSource roomDataSource = new RoomDataSource(this);
+        ArrayList<Room> roomList;
+        Building building;
+
+        roomList = roomDataSource.getAllRooms();
+
+        for(int index = 0; index < roomList.size(); index++){
+            //Checking if user's input match with database rooms
+            if (roomList.get(index).getRoomName().equalsIgnoreCase(room)) {
+
+                //Getting building information
+                getBuildingInformation(roomList.get(index));
+                                //WebServiceConnection webServiceConnection = new WebServiceConnection(this,3,roomList.get(index).getRoomID());
+                //webServiceConnection.checkServiceConnAST.execute();
+
+                HardCodeDB hardCodeDB = new HardCodeDB();
+                building = hardCodeDB.ResolvePath(roomList.get(index).getRoomID(),false);
+                return true;
+            }
+        }
+        return false;
+
+    }
+
+    private void getBuildingInformation(Room room) {
+
+    }
+
+
 }

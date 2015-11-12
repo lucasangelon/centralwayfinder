@@ -15,10 +15,14 @@ import org.ksoap2.serialization.SoapPrimitive;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 
+import java.net.Proxy;
+import java.util.ArrayList;
+
 import codefactory.centralwayfinderproject.R;
+import codefactory.centralwayfinderproject.dao.BuildingDataSource;
 import codefactory.centralwayfinderproject.dao.CampusDataSource;
 import codefactory.centralwayfinderproject.dao.RoomDataSource;
-import codefactory.centralwayfinderproject.database.HardCodeDB;
+import codefactory.centralwayfinderproject.models.Building;
 import codefactory.centralwayfinderproject.models.Campus;
 import codefactory.centralwayfinderproject.models.Room;
 
@@ -81,8 +85,10 @@ public class WebServiceConnection {
         //Variables
         CampusDataSource campusDataSource;
         RoomDataSource roomDataSource;
+        BuildingDataSource buildingDataSource;
         Useful useful;
         Dialog dialog;
+        SoapObject request, soapResult;
 
         public FetchData() {
         }
@@ -100,8 +106,6 @@ public class WebServiceConnection {
         @Override
         protected Void doInBackground(String... params) {
             if (checkServiceConn()){
-
-                HardCodeDB hardCodeDB = new HardCodeDB();
 
                 switch (option_method) {
                     case 1:
@@ -123,27 +127,26 @@ public class WebServiceConnection {
             return null;
         }
 
-
         @Override
         protected void onPostExecute(Void result) {
             if (!checkServiceResult){
 
-                    AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-                    builder.setMessage("Error Connecting to web service\n" + "Online content may not be available")
-                            .setTitle("WEB SERVICE ERROR")
-                            .setCancelable(false)
+                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                builder.setMessage("Error Connecting to web service\n" + "Online content may not be available")
+                        .setTitle("WEB SERVICE ERROR")
+                        .setCancelable(false)
                  /*
                     Exits app if user
                  */
-                            .setNegativeButton("Exit App",
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            ((Activity) (mContext)).finish();
-                                        }
+                        .setNegativeButton("Exit App",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        ((Activity) (mContext)).finish();
                                     }
-                            );
-                    AlertDialog alert = builder.create();
-                    alert.show();
+                                }
+                        );
+                AlertDialog alert = builder.create();
+                alert.show();
 
             }else{
                 dialog.dismiss(); // Close loading popup after execute doInBackground is method
@@ -157,10 +160,29 @@ public class WebServiceConnection {
 
         }
 
+        private void getEnvelope(String action) {
+            HttpTransportSE http = new HttpTransportSE(Proxy.NO_PROXY,URL,60000);
+            http.setXmlVersionTag("<!--?xml version=\"1.0\" encoding= \"UTF-8\" ?-->");
+
+            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+            envelope.dotNet = true;
+            envelope.implicitTypes = true;
+            envelope.setAddAdornments(false);
+            envelope.setOutputSoapObject(request);
+
+            try
+            {
+                http.call(SOAP_ACTION + action, envelope);
+                soapResult = (SoapObject) envelope.getResponse();
+            }
+            catch (Exception ex){
+                ex.printStackTrace();
+            }
+        }
+
+        // checkServiceConn Methods
         public boolean checkServiceConn() {
 
-            //there's probably a better way to pass around results but these global bools work ftm
-            //i think rather than using public global vars i should create an interface
             checkServiceResult = false;
 
             //Create request
@@ -197,44 +219,31 @@ public class WebServiceConnection {
 
         public void getCampusesFromWebService() {
 
-            //Create request
-            SoapObject request = new SoapObject(NAMESPACE, METHOD_GET_CAMPUSES);
-            //Create envelope
-            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
-                    SoapEnvelope.VER11);
-            envelope.dotNet = true;
-            //Set output SOAP object
-            envelope.setOutputSoapObject(request);
-            //Create HTTP call object
-            HttpTransportSE androidHttpTransport = new HttpTransportSE(URL);
+            request = new SoapObject(NAMESPACE, METHOD_GET_CAMPUSES);
+
+            getEnvelope(METHOD_GET_CAMPUSES);
 
             try {
-                //Invoke web service
-                androidHttpTransport.call(SOAP_ACTION + METHOD_GET_CAMPUSES, envelope);
-                //Get the response
-                SoapObject response = (SoapObject) envelope.bodyIn;
-                //get the array of campus objects
-                SoapObject responseTierOne = (SoapObject) response.getProperty(0);
-                //for each object in that array
 
-                for (int i = 0; i<responseTierOne.getPropertyCount(); i++){
+                for (int i = 0; i<soapResult.getPropertyCount(); i++){
                     //parse into a soap object
-                    SoapObject responseTierTwo = (SoapObject)responseTierOne.getProperty(i);
+                    SoapObject internalResult = (SoapObject)soapResult.getProperty(i);
                     Campus campus = new Campus();
 
                     //and pull out the fields
-                    campus.setCampusID(responseTierTwo.getPropertyAsString(0));
-                    campus.setCampusName(responseTierTwo.getPropertyAsString(1));
-                    campus.setCampusLong(Double.parseDouble(responseTierTwo.getPropertyAsString(3)));
-                    campus.setCampusLat(Double.parseDouble(responseTierTwo.getPropertyAsString(2)));
-                    campus.setCampusZoom(Double.parseDouble(responseTierTwo.getPropertyAsString(4)));
+                    campus.setCampusID(internalResult.getPropertyAsString(0));
+                    campus.setCampusName(internalResult.getPropertyAsString(1));
+                    campus.setCampusVersion(internalResult.getPropertyAsString(2));
+                    campus.setCampusLong(Double.parseDouble(internalResult.getPropertyAsString(3)));
+                    campus.setCampusLat(Double.parseDouble(internalResult.getPropertyAsString(4)));
+                    campus.setCampusZoom(Double.parseDouble(internalResult.getPropertyAsString(5)));
 
                     //Save campus on the local database
                     campusDataSource = new CampusDataSource(mContext);
                     campusDataSource.insertCampus(campus);
                 }
 
-                 Log.d(METHOD_GET_CAMPUSES, "SUCCESS");
+                Log.d(METHOD_GET_CAMPUSES, "SUCCESS");
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -244,50 +253,37 @@ public class WebServiceConnection {
         }
 
         public void getBuildingByRoomFromWebService() {
-            //Variables declaration
-            //Campus campus;
-            useful = new Useful(mContext);
-            //campus = useful.getDefaultCampus();
 
-            //Create request
-            SoapObject request = new SoapObject(NAMESPACE, METHOD_GET_BUILDING_BY_ROOM);
+            Building building = new Building();
+            ArrayList<String> maps = new ArrayList();
+
+            request = new SoapObject(NAMESPACE, METHOD_GET_BUILDING_BY_ROOM);
 
             //Adding Room Id and Disability option as arguments
-            request.addProperty("WaypointID",roomId);
-            request.addProperty("Disability",useful.getAccessibilityOption());
+            //request.addProperty("WaypointID",roomId);
+            //request.addProperty("Disability",useful.getAccessibilityOption());
 
-            //Create envelope
-            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
-                    SoapEnvelope.VER11);
-            envelope.dotNet = true;
-            //Set output SOAP object
-            envelope.setOutputSoapObject(request);
-            //Create HTTP call object
-            HttpTransportSE androidHttpTransport = new HttpTransportSE(URL);
+            request.addProperty("WaypointID",3);
+            request.addProperty("Disability", true);
+
+            getEnvelope(METHOD_GET_BUILDING_BY_ROOM);
 
             try {
-                //Invoke web service
-                androidHttpTransport.call(SOAP_ACTION + METHOD_GET_BUILDING_BY_ROOM, envelope);
-                //Get the response
-                SoapObject response = (SoapObject) envelope.bodyIn;
-                //get the array of campus objects
-                SoapObject responseTierOne = (SoapObject) response.getProperty(0);
-                //for each object in that array
 
-                for (int i = 0; i<responseTierOne.getPropertyCount(); i++){
-                    //parse into a soap object
-                    SoapObject responseTierTwo = (SoapObject)responseTierOne.getProperty(i);
-                    Room room = new Room();
+                building.setId(1);
+                building.setImage(((SoapObject) soapResult.getProperty(0)).getPropertyAsString(3));
+                building.setName(((SoapObject) soapResult.getProperty(0)).getPropertyAsString(2));
+                building.setLongitude(Double.parseDouble(((SoapObject) soapResult.getProperty(0)).getPropertyAsString(0)));
+                building.setLatitude(Double.parseDouble(((SoapObject) soapResult.getProperty(0)).getPropertyAsString(1)));
 
-                    //and pull out the fields
-                    room.setRoomID(Integer.parseInt(responseTierTwo.getPropertyAsString(0)));
-                    room.setRoomName(responseTierTwo.getPropertyAsString(1));
-
-                    //Save room in the local database
-                    roomDataSource = new RoomDataSource(mContext);
-                    roomDataSource.insertRoom(room);
-
+                SoapObject internalResult = ((SoapObject) soapResult.getProperty(1));
+                for (int i=0; i< internalResult.getPropertyCount(); i++){
+                    maps.add(internalResult.getProperty(i).toString());
                 }
+
+                //Save building on the local database
+                buildingDataSource = new BuildingDataSource(mContext);
+                buildingDataSource.insertBuilding(building);
 
                 Log.d(METHOD_GET_BUILDING_BY_ROOM, "SUCCESS");
 
@@ -304,45 +300,28 @@ public class WebServiceConnection {
             useful = new Useful(mContext);
             campus = useful.getDefaultCampus();
 
-            //Create request
-            SoapObject request = new SoapObject(NAMESPACE, METHOD_GET_ROOMS_BY_CAMPUS);
+            request = new SoapObject(NAMESPACE, METHOD_GET_ROOMS_BY_CAMPUS);
 
-            //Adding Campus Id as an argument at request object
-            request.addProperty("CampusID",campus.getCampusID());
+            request.addProperty("CampusID", campus.getCampusID());
 
-            //Create envelope
-            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
-                    SoapEnvelope.VER11);
-            envelope.dotNet = true;
-            //Set output SOAP object
-            envelope.setOutputSoapObject(request);
-            //Create HTTP call object
-            HttpTransportSE androidHttpTransport = new HttpTransportSE(URL);
+            getEnvelope(METHOD_GET_ROOMS_BY_CAMPUS);
 
             try {
-                //Invoke web service
-                androidHttpTransport.call(SOAP_ACTION + METHOD_GET_ROOMS_BY_CAMPUS, envelope);
-                //Get the response
-                SoapObject response = (SoapObject) envelope.bodyIn;
-                //get the array of campus objects
-                SoapObject responseTierOne = (SoapObject) response.getProperty(0);
-                //for each object in that array
-
-                for (int i = 0; i<responseTierOne.getPropertyCount(); i++){
+                for (int i = 0; i<soapResult.getPropertyCount(); i++){
                     //parse into a soap object
-                    SoapObject responseTierTwo = (SoapObject)responseTierOne.getProperty(i);
+                    SoapObject internalResult = (SoapObject)soapResult.getProperty(i);
                     Room room = new Room();
 
                     //and pull out the fields
-                    room.setRoomID(Integer.parseInt(responseTierTwo.getPropertyAsString(0)));
-                    room.setRoomName(responseTierTwo.getPropertyAsString(1));
+                    room.setRoomID(Integer.parseInt(internalResult.getPropertyAsString(0)));
+                    room.setRoomName(internalResult.getPropertyAsString(1));
+                    room.setBuildingID(Integer.parseInt(internalResult.getPropertyAsString(2)));
+                    room.setRoomImage(internalResult.getPropertyAsString(3));
 
                     //Save room in the local database
                     roomDataSource = new RoomDataSource(mContext);
                     roomDataSource.insertRoom(room);
-
                 }
-
                 Log.d(METHOD_GET_ROOMS_BY_CAMPUS, "SUCCESS");
 
             } catch (Exception e) {

@@ -37,6 +37,8 @@ public class RoomDataSource {
         ContentValues values = new ContentValues();
         values.put(dbHelper.COLUMN_ROOM_ID, objRoom.getRoomID());
         values.put(dbHelper.COLUMN_ROOM_NAME, objRoom.getRoomName());
+        values.put(dbHelper.COLUMN_BUILDING_ID_FK, objRoom.getBuildingID());
+        values.put(dbHelper.COLUMN_ROOM_IMAGE, objRoom.getRoomImage());
 
         database.insert(dbHelper.TABLE_ROOM, null, values);
 
@@ -59,6 +61,8 @@ public class RoomDataSource {
             Room room = new Room();
             room.setRoomID(res.getInt(res.getColumnIndex(dbHelper.COLUMN_ROOM_ID)));
             room.setRoomName(res.getString(res.getColumnIndex(dbHelper.COLUMN_ROOM_NAME)));
+            room.setBuildingID(res.getInt(res.getColumnIndex(dbHelper.COLUMN_BUILDING_ID_FK)));
+            room.setRoomImage(res.getString(res.getColumnIndex(dbHelper.COLUMN_ROOM_IMAGE)));
 
             allRooms.add(room);
             res.moveToNext();
@@ -83,6 +87,8 @@ public class RoomDataSource {
             Room room = new Room();
             room.setRoomID(res.getInt(res.getColumnIndex(dbHelper.COLUMN_ROOM_ID)));
             room.setRoomName(res.getString(res.getColumnIndex(dbHelper.COLUMN_ROOM_NAME)));
+            room.setBuildingID(res.getInt(res.getColumnIndex(dbHelper.COLUMN_BUILDING_ID_FK)));
+            room.setRoomImage(res.getString(res.getColumnIndex(dbHelper.COLUMN_ROOM_IMAGE)));
 
             serviceList.add(room);
             res.moveToNext();

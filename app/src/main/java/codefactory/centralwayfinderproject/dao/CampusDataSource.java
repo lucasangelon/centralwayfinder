@@ -19,7 +19,6 @@ public class CampusDataSource {
     // Database fields
     private SQLiteDatabase database;
     private MySQLiteHelper dbHelper;
-    private String[] allColumns = {MySQLiteHelper.COLUMN_ID, MySQLiteHelper.COLUMN_NAME, MySQLiteHelper.COLUMN_LONG, MySQLiteHelper.COLUMN_LAT, MySQLiteHelper.COLUMN_ZOOM};
 
     public CampusDataSource(Context context) {
         dbHelper = new MySQLiteHelper(context);
@@ -38,12 +37,11 @@ public class CampusDataSource {
         ContentValues values = new ContentValues();
         values.put(dbHelper.COLUMN_ID, objCampus.getCampusID());
         values.put(dbHelper.COLUMN_NAME, objCampus.getCampusName());
+        values.put(dbHelper.COLUMN_VERSION, objCampus.getCampusVersion());
         values.put(dbHelper.COLUMN_LONG, objCampus.getCampusLong());
         values.put(dbHelper.COLUMN_LAT, objCampus.getCampusLat());
         values.put(dbHelper.COLUMN_ZOOM, objCampus.getCampusZoom());
 
-        //INSERT INTO campus(CampusLong,CampusLat,CampusName,CampusZoom,CampusID) VALUES (?,?,?,?,?)
-        //database.execSQL("INSERT INTO campus(CampusLong,CampusLat,CampusName,CampusZoom,CampusID) VALUES ("+objCampus.getCampusLong()+","+objCampus.getCampusLat()+",'"+objCampus.getCampusName()+"',"+objCampus.getCampusZoom()+",'"+objCampus.getCampusID()+"')");
         database.insert(dbHelper.TABLE_CAMPUS, null, values);
         Log.d("INSERT CAMPUS" ,objCampus.toString());
         close();
@@ -64,6 +62,7 @@ public class CampusDataSource {
             Campus campus = new Campus();
             campus.setCampusID(res.getString(res.getColumnIndex(dbHelper.COLUMN_ID)));
             campus.setCampusName(res.getString(res.getColumnIndex(dbHelper.COLUMN_NAME)));
+            campus.setCampusVersion(res.getString(res.getColumnIndex(dbHelper.COLUMN_VERSION)));
             campus.setCampusLat(res.getDouble(res.getColumnIndex(dbHelper.COLUMN_LAT)));
             campus.setCampusLong(res.getDouble(res.getColumnIndex(dbHelper.COLUMN_LONG)));
             campus.setCampusZoom(res.getDouble(res.getColumnIndex(dbHelper.COLUMN_ZOOM)));
@@ -88,6 +87,7 @@ public class CampusDataSource {
         //Setting query value on the object
         result.setCampusID(res.getString(res.getColumnIndex(dbHelper.COLUMN_ID)));
         result.setCampusName(res.getString(res.getColumnIndex(dbHelper.COLUMN_NAME)));
+        result.setCampusVersion(res.getString(res.getColumnIndex(dbHelper.COLUMN_VERSION)));
         result.setCampusLat(res.getDouble(res.getColumnIndex(dbHelper.COLUMN_LAT)));
         result.setCampusLong(res.getDouble(res.getColumnIndex(dbHelper.COLUMN_LONG)));
         result.setCampusZoom(res.getDouble(res.getColumnIndex(dbHelper.COLUMN_ZOOM)));

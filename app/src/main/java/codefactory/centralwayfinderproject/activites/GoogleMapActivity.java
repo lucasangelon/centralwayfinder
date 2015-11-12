@@ -123,7 +123,7 @@ public class GoogleMapActivity extends FragmentActivity {
     public void onSearch(View v) {
 
         EditText userDestination = (EditText) findViewById(R.id.txtAddress);
-        String destination = userDestination.getText().toString();
+        final String destination = userDestination.getText().toString();
         List<Address> addressList = null;
 
         //Check if destination is null or empty
@@ -132,7 +132,7 @@ public class GoogleMapActivity extends FragmentActivity {
             /** New solution using webservice and database*/
             if (searchForRoom(destination)){
                 endLocation = new LatLng(-31.94760d, 115.86121d);
-                //endLocation = new LatLng(building.getBuildingLat(),building.getBuildingLong());
+                //endLocation = new LatLng(building.getLatitude(),building.getLongitude());
 
                 //Search for the route
                 String url = getMapsApiDirectionsUrl(startLocation, endLocation, MODE_DRIVING);
@@ -151,7 +151,6 @@ public class GoogleMapActivity extends FragmentActivity {
                         //Go to BuildingView
                         Intent intent = new Intent(getApplicationContext(), BuildingViewActivity.class);
                         startActivity(intent);
-                      Toast.makeText(getApplicationContext(), "Requested Send", Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -173,7 +172,7 @@ public class GoogleMapActivity extends FragmentActivity {
 
                             //
                             TextView title = (TextView) v.findViewById(R.id.txt_Title);
-                            title.setText(building.getBuildingTitle() + "\n" + building.getBuildingAddress());
+                            title.setText(building.getName() + "\n" + destination);
                             marker.getPosition();
                         }
 

@@ -66,7 +66,7 @@ public class IndoorMapsActivity extends AppCompatActivity {
         /*
             Change 18/9, Multiple images
         */
-        String[] imageURL = {"Img\\TEST.png","Img\\PE0301635824266396694365.png"};
+        String[] imageURL = {"C:\\Inetpub\\vhosts\\student.mydesign.central.wa.edu.au\\httpdocs\\cf_Wayfinding_WebService\\/Img/TEST635828700889137027.png"};
         task.execute(imageURL);
         //string : C:\Inetpub\vhosts\student.mydesign.central.wa.edu.au\httpdocs\cf_Wayfinding_WebService\/Img/PE0301635824266396694365.png
         //img.setImageResource(R.mipmap.resultpath);
