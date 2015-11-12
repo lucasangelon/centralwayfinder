@@ -40,11 +40,9 @@ public class SplashActivity extends Activity implements OnClickListener {
 
         //Checking Networking Connection
         if (isOnline()) {
-            WebServiceConnection webServiceConnection = new WebServiceConnection(this,3);
-            webServiceConnection.checkServiceConnAST.execute();
 
-            if(isFirstTime){
-                 webServiceConnection = new WebServiceConnection(this,1);
+             if(isFirstTime){
+                WebServiceConnection webServiceConnection = new WebServiceConnection(this,1);
                 webServiceConnection.checkServiceConnAST.execute();
 
             }
