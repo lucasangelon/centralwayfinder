@@ -7,7 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.GridView;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -34,7 +34,7 @@ public class ServiceActivity extends AppCompatActivity{
         roomDataSource = new RoomDataSource(this);
         roomsList = roomDataSource.getServices();
 
-        GridView adapterView = (GridView) findViewById(R.id.service_list);
+        ListView adapterView = (ListView) findViewById(R.id.service_list);
         adapterView.setAdapter(new ServiceAdapter(this, roomsList));
     }
 

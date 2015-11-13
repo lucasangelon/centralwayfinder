@@ -43,8 +43,7 @@ public class SelectCampusActivity extends AppCompatActivity{
             campusNames.add(campusesList.get(x).getCampusName());
         }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, campusNames);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,R.layout.simple_list_item, campusNames);
         listViewCampus.setAdapter(adapter);
 
         //Getting the list item selected
