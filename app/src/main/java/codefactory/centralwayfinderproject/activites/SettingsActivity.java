@@ -1,21 +1,43 @@
 package codefactory.centralwayfinderproject.activites;
 
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
+import android.widget.CompoundButton;
+import android.widget.Switch;
+import android.widget.Toast;
 
 import codefactory.centralwayfinderproject.R;
+import codefactory.centralwayfinderproject.helpers.Useful;
 
 public class SettingsActivity extends ActionBarActivity {
+
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+
+        toolbar = (Toolbar) findViewById(R.id.tool_bar);
+        setSupportActionBar(toolbar);
+
+        final Useful util = new Useful(this);
+        Switch switchAccessibility = (Switch) findViewById(R.id.Switch_Accessibility);
+        switchAccessibility.setChecked(util.getAccessibilityOption());
+
+        //Save the button event on the preference file
+        switchAccessibility.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView,boolean isChecked) {
+               util.setAccessibilityOption(isChecked);
+            }
+        });
     }
 
     @Override
@@ -33,7 +55,25 @@ public class SettingsActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_icon1) {
+            Intent intent = new Intent(this, MenuActivity.class);
+            startActivity(intent);
+            return true;
+        }
+        if (id == R.id.action_icon2) {
+            Toast.makeText(getApplicationContext(), "Missing Implementation1...",
+                    Toast.LENGTH_LONG).show();
+            return true;
+        }
+        if (id == R.id.action_icon3) {
+            Uri uri = Uri.parse("http://central.wa.edu.au/Pages/default.aspx"); // missing 'http://' will cause crash
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(intent);
+            return true;
+        }
+        if (id == R.id.action_icon4) {
+            Toast.makeText(getApplicationContext(), "Missing Implementation3...",
+                    Toast.LENGTH_LONG).show();
             return true;
         }
 
@@ -43,25 +83,25 @@ public class SettingsActivity extends ActionBarActivity {
     public void handleOnClick(View view)
     {
         switch(view.getId()) {
-            case R.id.txt_About:
+            case R.id.blockAbout:
                 Intent intent = new Intent(this, AboutActivity.class);
                 startActivity(intent);
 
                 break;
 
-            case R.id.txt_Campus:
+            case R.id.blockSelectCampus:
                 intent = new Intent(this, SelectCampusActivity.class);
                 startActivity(intent);
 
                 break;
 
-            case R.id.txt_Policy:
+            case R.id.blockPrivacyPolicy:
                 intent = new Intent(this, CopyrightActivity.class);
                 startActivity(intent);
 
                 break;
 
-            case R.id.txt_Terms:
+            case R.id.blockTermsService:
                 intent = new Intent(this, TermsActivity.class);
                 startActivity(intent);
 

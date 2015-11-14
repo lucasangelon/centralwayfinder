@@ -66,6 +66,14 @@
             android:name=".activites.ServiceActivity"
             android:label="@string/title_activity_service" >
         </activity>
+        <activity
+            android:name=".activites.TermsActivity"
+            android:label="@string/title_activity_terms" >
+        </activity>
+        <activity
+            android:name=".activites.AboutActivity"
+            android:label="@string/title_activity_about" >
+        </activity>
     </application>
 
 </manifest>
