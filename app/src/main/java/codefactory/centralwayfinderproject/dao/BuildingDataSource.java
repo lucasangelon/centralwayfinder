@@ -2,6 +2,7 @@ package codefactory.centralwayfinderproject.dao;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
@@ -41,5 +42,28 @@ public class BuildingDataSource {
         Log.d("INSERT BUILDING", object.toString());
         close();
 
+    }
+
+    /**
+     * Get all elements from Room table
+     */
+    public Building getBuilding(int buildinID){
+        Building building = null;
+
+        database = dbHelper.getReadableDatabase();
+
+        Cursor res = database.rawQuery(dbHelper.SQL_SELECT_TABLE_BUILDING + " WHERE " + dbHelper.COLUMN_BUILDING_ID + " = " + buildinID, null);
+        res.moveToFirst();
+
+        if(res.getCount() > 0) {
+            building = new Building();
+            building.setId(res.getInt(res.getColumnIndex(dbHelper.COLUMN_BUILDING_ID)));
+            building.setImage(res.getString(res.getColumnIndex(dbHelper.COLUMN_BUILDING_IMAGE)));
+            building.setName(res.getString(res.getColumnIndex(dbHelper.COLUMN_BUILDING_NAME)));
+            building.setLongitude(res.getDouble(res.getColumnIndex(dbHelper.COLUMN_BUILDING_LONGITUDE)));
+            building.setLatitude(res.getDouble(res.getColumnIndex(dbHelper.COLUMN_BUILDING_LATITUDE)));
+        }
+        close();
+        return building;
     }
 }

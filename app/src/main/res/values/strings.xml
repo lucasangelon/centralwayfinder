@@ -24,7 +24,7 @@
     <string name="open_location_settings">Open Settings</string>
     <string name="cancel">Cancel</string>
     <string name="open_network_settings">Open Setting</string>
-    <string name="title_activity_menu">MenuActivity</string>
+    <string name="title_activity_menu">HOME</string>
     <string name="title_activity_select_campus">CAMPUS LIST</string>
     <string name="title_activity_settings">SETTINGS</string>
     <string name="title_activity_about">ABOUT</string>

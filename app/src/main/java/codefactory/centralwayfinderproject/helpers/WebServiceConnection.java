@@ -49,7 +49,7 @@ public class WebServiceConnection {
     //Variables
     Context mContext;
     int option_method;
-    int roomId;
+    Room room;
 
     /**
      * Create a instance of WebServiceConnection object
@@ -68,12 +68,12 @@ public class WebServiceConnection {
      * Create a instance of WebServiceConnection object
      * @param mContext
      * @param option - Which method do you want to use in your AsyncTask
-     * @param roomId - Which room you're looking for
+     * @param room - Which room you're looking for
      */
-    public WebServiceConnection(Context mContext,int option, int roomId) {
+    public WebServiceConnection(Context mContext,int option, Room room) {
         this.mContext = mContext;
         this.option_method = option;
-        this.roomId = roomId;
+        this.room = room;
 
         //check web service connection and retrieve campus list (if connection available)
         checkServiceConnAST = new FetchData ();
@@ -110,11 +110,9 @@ public class WebServiceConnection {
                 switch (option_method) {
                     case 1:
                         getCampusesFromWebService();
-                        //hardCodeDB.Search_Campus(mContext);
                         break;
                     case 2:
                         getRoomsByCampusFromWebService();
-                        //hardCodeDB.SearchRooms(mContext);
                         break;
                     case 3:
                         getBuildingByRoomFromWebService();
@@ -150,6 +148,12 @@ public class WebServiceConnection {
 
             }else{
                 dialog.dismiss(); // Close loading popup after execute doInBackground is method
+
+                try {
+                    finalize();
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
             }
 
         }
@@ -256,21 +260,19 @@ public class WebServiceConnection {
 
             Building building = new Building();
             ArrayList<String> maps = new ArrayList();
+            useful = new Useful(mContext);
 
             request = new SoapObject(NAMESPACE, METHOD_GET_BUILDING_BY_ROOM);
 
-            //Adding Room Id and Disability option as arguments
-            //request.addProperty("WaypointID",roomId);
-            //request.addProperty("Disability",useful.getAccessibilityOption());
-
-            request.addProperty("WaypointID",3);
-            request.addProperty("Disability", true);
+            //Adding Room Id and Accessibility option as arguments
+            request.addProperty("WaypointID",room.getRoomID());
+            request.addProperty("Disability",useful.getAccessibilityOption());
 
             getEnvelope(METHOD_GET_BUILDING_BY_ROOM);
 
             try {
 
-                building.setId(1);
+                building.setId(room.getBuildingID());
                 building.setImage(((SoapObject) soapResult.getProperty(0)).getPropertyAsString(3));
                 building.setName(((SoapObject) soapResult.getProperty(0)).getPropertyAsString(2));
                 building.setLongitude(Double.parseDouble(((SoapObject) soapResult.getProperty(0)).getPropertyAsString(0)));

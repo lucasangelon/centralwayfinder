@@ -6,17 +6,38 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context=".MenuActivity">
 
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|center_horizontal"
+        android:background="@mipmap/top_orange_banner"
+        android:id="@+id/topBar">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@string/title_activity_menu"
+            android:id="@+id/textView6"
+            android:textStyle="normal"
+            android:textColor="#ffffff"
+            android:textAlignment="center"
+            android:layout_gravity="center" />
+    </LinearLayout>
+
+
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/topBar"
         android:id="@+id/imageView"
-        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:maxHeight="200dp"
         android:maxWidth="400dp"
         android:minHeight="200dp"
         android:minWidth="400dp"
-        android:background="#ffffab29"
+        android:background="@mipmap/img_menu"
         android:layout_marginBottom="30dp" />
 
     <LinearLayout
@@ -25,50 +46,98 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/imageView"
         android:id="@+id/searchOption"
-        android:background="#e2e2e2">
+        android:background="@mipmap/bg_no_arrow"
+        android:paddingLeft="10dp">
 
         <EditText
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:id="@+id/txtSearch"/>
+            android:id="@+id/txtSearch" />
 
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/btnSearch"
-            android:background="@mipmap/ic_search"/>
+            android:background="@mipmap/ic_search"
+            android:onClick="onClick"/>
     </LinearLayout>
 
-    <Button
-        android:layout_width="400dp"
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="SERVICES"
-        android:id="@+id/button2"
-        android:layout_gravity="start"
-        android:gravity="start"
+        android:background="@mipmap/background_buttons"
         android:layout_below="@+id/searchOption"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:id="@+id/serviceOption"
+        android:onClick="onClick">
 
-    <Button
-        android:layout_width="400dp"
-        android:layout_height="wrap_content"
-        android:text="CENTRAL WEB"
-        android:id="@+id/button3"
-        android:layout_gravity="start"
-        android:gravity="start"
-        android:layout_below="@+id/button2"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        <ImageView
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_services"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="15dp" />
 
-    <Button
-        android:layout_width="400dp"
+        <TextView
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:text="SERVICES" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="SETTINGS"
-        android:id="@+id/button4"
-        android:layout_gravity="start"
-        android:gravity="start"
-        android:layout_below="@+id/button3"
-        android:layout_centerHorizontal="true" />
+        android:background="@mipmap/background_buttons"
+        android:layout_below="@+id/serviceOption"
+        android:id="@+id/centralWebOption"
+        android:onClick="onClick">
+
+        <ImageView
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_central_web"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="15dp" />
+
+        <TextView
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:text="CENTRAL WEB" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@mipmap/background_buttons"
+        android:layout_below="@+id/centralWebOption"
+        android:id="@+id/settingsOption"
+        android:onClick="onClick">
+
+        <ImageView
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_settings"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="15dp" />
+
+        <TextView
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:text="SETTINGS" />
+
+    </LinearLayout>
 
 </RelativeLayout>
