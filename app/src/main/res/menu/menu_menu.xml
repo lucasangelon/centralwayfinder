@@ -12,7 +12,7 @@
         android:id="@+id/action_icon2"
         android:orderInCategory="2"
         android:title="Search1"
-        android:icon="@mipmap/ic_home"
+        android:icon="@mipmap/ic_services"
         app:showAsAction="always"></item>
     <item
         android:id="@+id/action_icon3"
