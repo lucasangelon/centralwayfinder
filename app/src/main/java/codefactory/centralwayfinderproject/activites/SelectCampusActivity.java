@@ -1,6 +1,5 @@
 package codefactory.centralwayfinderproject.activites;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -32,6 +31,7 @@ public class SelectCampusActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_campus);
 
+        useful = new Useful(this);
         listViewCampus =(ListView) findViewById(R.id.listCampus);
 
         //Get all Campus from Database
@@ -50,24 +50,14 @@ public class SelectCampusActivity extends AppCompatActivity{
         listViewCampus.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapter, View v, int position, long arg3) {
-                // Get item name on the list
-                String value = (String) adapter.getItemAtPosition(position);
 
-                //Save campus on the preference file for future's checking, also set up first time to false
-                prefs = getSharedPreferences("Settings", MODE_PRIVATE);
-                prefs.edit().putBoolean("firstTime", false).commit();
-                useful = new Useful(getApplicationContext());
-                useful.setDefaultCampus(campusesList.get(position));
+                boolean isFirstTime = useful.getIsFirstTimeOption();
 
-                //Getting rooms from WebService and save on the database
-                getRoomOnWebService();
-
-                //Getting services from WebService and save on the database
-                //getServicesOnWebService();
-
-                //Go to Menu Activity
-                Intent intent = new Intent(v.getContext(), MenuActivity.class);
-                startActivity(intent);
+                if(isFirstTime){
+                    firstTimeAction(campusesList.get(position));
+                } else{
+                    changeCampus(campusesList.get(position));
+                }
             }
         });
     }
@@ -76,19 +66,41 @@ public class SelectCampusActivity extends AppCompatActivity{
      * Getting Room by Campus from WebService and saving those room in the local database
      */
     public void getRoomOnWebService(){
-
         webServiceConnection = new WebServiceConnection(this,2);
-        webServiceConnection.checkServiceConnAST.execute();
+        webServiceConnection.execute();
 
     }
 
     /**
-     * Getting Services by Campus from WebService and saving those room in the local database
+     * Action if the app running for the first time
      */
-    public void getServicesOnWebService(){
+    public void firstTimeAction(Campus selectedCampus){
+        useful.setDefaultCampus(selectedCampus);
+        getRoomOnWebService();
+        useful.setIsFirstTimeOption(false);
 
-        webServiceConnection = new WebServiceConnection(this,4);
-        webServiceConnection.checkServiceConnAST.execute();
+    }
+
+    /**
+     * Action if the app running for the first time
+     */
+    public void changeCampus(Campus selectedCampus){
+        Campus oldCampus = useful.getDefaultCampus();
+
+        if(oldCampus.getCampusName() == selectedCampus.getCampusName()){
+            //Update campus ONLY if version is different
+            if(oldCampus.getCampusVersion() != selectedCampus.getCampusVersion()){
+                dataSource.updateCampus(selectedCampus);
+                useful.setDefaultCampus(selectedCampus);
+                dataSource.dropTable();
+                getRoomOnWebService();
+            }
+        }else{//Update if name IS different
+            dataSource.updateCampus(selectedCampus);
+            useful.setDefaultCampus(selectedCampus);
+            dataSource.dropTable();
+            getRoomOnWebService();
+        }
 
     }
 

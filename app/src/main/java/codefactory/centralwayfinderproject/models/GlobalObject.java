@@ -2,6 +2,8 @@ package codefactory.centralwayfinderproject.models;
 
 import android.app.Application;
 
+import java.util.ArrayList;
+
 /**
  * Created by Gustavo on 17/11/2015.
  */
@@ -14,7 +16,9 @@ public class GlobalObject extends Application {
     private String buildingName;
     private int roomID;
     private String roomName;
-    private String buildingPath;
+    private ArrayList<String> maps;
+
+
 
     public int getBuildingID() {
         return buildingID;
@@ -72,11 +76,11 @@ public class GlobalObject extends Application {
         this.roomName = roomName;
     }
 
-    public String getBuildingPath() {
-        return buildingPath;
+    public ArrayList<String> getMaps() {
+        return maps;
     }
 
-    public void setBuildingPath(String buildingPath) {
-        this.buildingPath = buildingPath;
+    public void setMaps(ArrayList<String> maps) {
+        this.maps = maps;
     }
 }

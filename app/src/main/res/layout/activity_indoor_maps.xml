@@ -4,13 +4,28 @@
     android:layout_height="fill_parent"
     android:gravity="top"
     android:orientation="vertical"
-    tools:context="codefactory.centralwayfinderproject.activites.IndoorMapsActivity">
+    tools:context="codefactory.centralwayfinderproject.activites.IndoorMapsActivity"
+    android:weightSum="1">
 
-    <codefactory.centralwayfinderproject.helpers.MultiTouch
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/mapMultiTouch"
-        android:layout_alignParentTop="true" />
+        android:gravity="center_vertical|center_horizontal"
+        android:background="@mipmap/top_orange_banner"
+        android:id="@+id/topBar">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@string/title_activity_indoor_maps"
+            android:id="@+id/textView6"
+            android:textStyle="normal"
+            android:textColor="#ffffff"
+            android:textAlignment="center"
+            android:layout_gravity="center" />
+    </LinearLayout>
 
     <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -43,28 +58,20 @@
 
     </RelativeLayout>
 
-    <!--<ScrollView
-        android:id="@+id/scrollView1"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
+    <codefactory.centralwayfinderproject.helpers.MultiTouch
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/mapMultiTouch"
+        android:layout_alignParentTop="true"
+        android:layout_weight="0.99" />
 
-        <HorizontalScrollView
-            android:id="@+id/horizontalScrollView1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:gravity="top">
-
-                <ImageView
-                    android:id="@+id/imageIndoor"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-            </LinearLayout>
-        </HorizontalScrollView>
-    </ScrollView>-->
+    <!-- This is where we add our custom toolbar to the pages-->
+    <codefactory.centralwayfinderproject.helpers.MyCustomToolbar
+        android:id="@+id/tool_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#f2f2f2">
+    </codefactory.centralwayfinderproject.helpers.MyCustomToolbar>
 
 </LinearLayout>

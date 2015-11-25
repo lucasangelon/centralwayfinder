@@ -19,8 +19,8 @@
     <string name="Copyright">Copyright</string>
     <string name="Search">Search</string>
     <string name="User">User</string>
-    <string name="title_activity_google_map">GoogleMapActivity</string>
-    <string name="title_activity_buildingview">BuildingViewActivity</string>
+    <string name="title_activity_google_map">MAP</string>
+    <string name="title_activity_buildingview">BUILDING INFORMATION</string>
     <string name="open_location_settings">Open Settings</string>
     <string name="cancel">Cancel</string>
     <string name="open_network_settings">Open Setting</string>
@@ -29,6 +29,6 @@
     <string name="title_activity_settings">SETTINGS</string>
     <string name="title_activity_about">ABOUT</string>
     <string name="title_activity_terms">TERMS OF SERVICES</string>
-    <string name="title_activity_indoor_maps">IndoorMapsActivity</string>
+    <string name="title_activity_indoor_maps">INTERNAL MAP</string>
     <string name="title_activity_service">SERVICES</string>
 </resources>

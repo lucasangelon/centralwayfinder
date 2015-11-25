@@ -1,16 +1,18 @@
 package codefactory.centralwayfinderproject.activites;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.location.Address;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -28,59 +30,63 @@ import java.util.HashMap;
 import java.util.List;
 
 import codefactory.centralwayfinderproject.R;
-import codefactory.centralwayfinderproject.dao.RoomDataSource;
-import codefactory.centralwayfinderproject.database.HardCodeDB;
 import codefactory.centralwayfinderproject.helpers.HttpConnection;
 import codefactory.centralwayfinderproject.helpers.PathJSONParser;
 import codefactory.centralwayfinderproject.helpers.Useful;
-import codefactory.centralwayfinderproject.models.Building;
 import codefactory.centralwayfinderproject.models.Campus;
-import codefactory.centralwayfinderproject.models.Room;
+import codefactory.centralwayfinderproject.models.GlobalObject;
 
 /**
  * Created by Gustavo on 21/09/2015.
  */
 public class GoogleMapActivity extends FragmentActivity {
 
-    private LatLng startLocation;
-    private LatLng endLocation;
+    private GlobalObject globalObject;
+    private Campus pointOne;
     private Float defaultZoom = 15.0f;
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private final static String MODE_DRIVING = "driving";
     private final static String MODE_WALKING = "walking";
-
-    private Campus startPoint;
     private Useful util;
-
-    private Building building;
+    private LatLng startLocation;
+    private LatLng endLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_google_map);
 
-        startPoint = new Campus();
+        // Calling Application class (see application tag in AndroidManifest.xml)
+        //This object holds information about building and room which the user are looking for.
+        globalObject = (GlobalObject) getApplicationContext();
+
+        pointOne = new Campus();
         util = new Useful(this);
 
-        /*
-        * Check if the gps is ON or OFF
-        * In case ON: Use current location as start point
-        * In case OFF: Use campus start point as start point
-        */
-        if(util.isGpsOn()) {
-            //Get current location
-            startPoint.setCampusLat(util.getUserLocation().getLatitude());
-            startPoint.setCampusLong(util.getUserLocation().getLongitude());
-            startPoint.setCampusZoom(15.0);
+        if(util.isGpsOn()){
+            //Get current location position
+            pointOne.setCampusLat(util.getUserLocation().getLatitude());
+            pointOne.setCampusLong(util.getUserLocation().getLongitude());
 
         } else {
-            //Getting default campus name from preference file.
-            startPoint = util.getDefaultCampus();
+            //Loading campus details from preference file.
+            pointOne = util.getDefaultCampus();
 
         }
 
-        startLocation = new LatLng(startPoint.getCampusLat(), startPoint.getCampusLong());
-        setUpMapIfNeeded();
+        startLocation = new LatLng(pointOne.getCampusLat(), pointOne.getCampusLong());
+        endLocation = new LatLng(globalObject.getBuildingLatitude(), globalObject.getBuildingLongitude());
+
+        if (setUpMapIfNeeded()){
+            //Search for the route
+            String url = getMapsApiDirectionsUrl(startLocation, endLocation, MODE_DRIVING);
+            ReadTask downloadTask = new ReadTask();
+            downloadTask.execute(url);
+
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(endLocation, defaultZoom));
+            mMap.setMyLocationEnabled(false);
+            createPopUpDetailing();
+        }
     }
 
     @Override
@@ -89,16 +95,90 @@ public class GoogleMapActivity extends FragmentActivity {
         setUpMapIfNeeded();
     }
 
-    private void setUpMapIfNeeded() {
-        // Do a null check to confirm that we have not already instantiated the map.
-        if (mMap == null) {
-            // Try to obtain the map from the SupportMapFragment.
-            mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
-                    .getMap();
-            // Check if we were successful in obtaining the map.
-            if (mMap != null) {
-                setUpMap();
+    private void createPopUpDetailing() {
+        // Display popup on which point
+        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                //Go to BuildingView
+                Intent intent = new Intent(getApplicationContext(), BuildingViewActivity.class);
+                startActivity(intent);
             }
+        });
+
+        //SetUP popup INFORMATION
+        mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+            @Override
+            public View getInfoWindow(Marker marker) {
+                return null;
+            }
+
+            @Override
+            public View getInfoContents(Marker marker) {
+
+                View v = null;
+                if (!marker.getPosition().equals(startLocation)) {
+                    // Getting view from the layout file
+                    v = getLayoutInflater().inflate(R.layout.googlemaps_popup, null);
+                    TextView title = (TextView) v.findViewById(R.id.txt_Title);
+                    title.setText(globalObject.getBuildingName() + "\n" + globalObject.getRoomName());
+                    marker.getPosition();
+                }
+                return v;
+            }
+        });
+    }
+
+    private boolean setUpMapIfNeeded() {
+        boolean result = false;
+        // Do a null check to confirm that we have not already instantiated the map.
+        if (mMap == null){
+            // Try to obtain the map from the SupportMapFragment.
+            mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
+
+            if(isGoogleMapsInstalled()){
+                if (mMap != null){
+                    setUpMap();
+                    result = true;
+                }
+                else{
+                    result = false;
+                }
+            }
+            else{ //Display a msg if google map is not found
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage("Install Google Maps");
+                builder.setCancelable(false);
+                builder.setPositiveButton("Install",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.google.android.apps.maps"));
+                                startActivity(intent);
+                                //Finish the activity so they can't circumvent the check
+                                finish();
+                            }
+                        });
+                AlertDialog dialog = builder.create();
+                dialog.show();
+                result = false;
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Check if Google maps is installed on the phone
+     * @return boolean
+     */
+
+    public boolean isGoogleMapsInstalled()
+    {
+        try{
+            ApplicationInfo info = getPackageManager().getApplicationInfo("com.google.android.apps.maps", 0 );
+            return true;
+        }
+        catch(PackageManager.NameNotFoundException e){
+            return false;
         }
     }
 
@@ -111,160 +191,18 @@ public class GoogleMapActivity extends FragmentActivity {
         mMap.addMarker(
                 new MarkerOptions()
                         .position(startLocation)
-                        .title(startPoint.getCampusName())
+                        .title(pointOne.getCampusName())
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(startLocation, Float.parseFloat(Double.toString(startPoint.getCampusZoom()))));
-        mMap.setMyLocationEnabled(false);
-    }
 
-    /**
-     * Method to search destination place input
-     */
-    public void onSearch(View v) {
+        customAddMarker();
 
-        EditText userDestination = (EditText) findViewById(R.id.txtAddress);
-        final String destination = userDestination.getText().toString();
-        List<Address> addressList = null;
-
-        //Check if destination is null or empty
-        if (destination != null || !destination.equals("")) {
-
-            /** New solution using webservice and database*/
-            if (searchForRoom(destination)){
-                endLocation = new LatLng(-31.94760d, 115.86121d);
-                //endLocation = new LatLng(building.getLatitude(),building.getLongitude());
-
-                //Search for the route
-                String url = getMapsApiDirectionsUrl(startLocation, endLocation, MODE_DRIVING);
-                ReadTask downloadTask = new ReadTask();
-                downloadTask.execute(url);
-
-                //Re-call the map with the new location
-                customAddMarker(endLocation, destination, destination);
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(endLocation, defaultZoom));
-                mMap.setMyLocationEnabled(false);
-
-                // Display popup on which point
-                mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-                    @Override
-                    public void onInfoWindowClick(Marker marker) {
-                        //Go to BuildingView
-                        Intent intent = new Intent(getApplicationContext(), BuildingViewActivity.class);
-                        startActivity(intent);
-                    }
-                });
-
-                mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
-
-                    @Override
-                    public View getInfoWindow(Marker marker) {
-                        return null;
-                    }
-
-                    @Override
-                    public View getInfoContents(Marker marker) {
-
-                        View v = null;
-
-                        if (!marker.getPosition().equals(startLocation)) {
-                            // Getting view from the layout file
-                            v = getLayoutInflater().inflate(R.layout.googlemaps_popup, null);
-
-                            //
-                            TextView title = (TextView) v.findViewById(R.id.txt_Title);
-                            title.setText(building.getName() + "\n" + destination);
-                            marker.getPosition();
-                        }
-
-                        return v;
-                    }
-                });
-
-            } else{
-
-                Toast.makeText(this,"Room is unavailable or not in this Campus",Toast.LENGTH_SHORT).show();
-            }
-
-
-            /*Old code
-            Geocoder geocoder = new Geocoder(this);
-            try {
-                //Using Geocoder's object to transform string in geolocation
-                addressList = geocoder.getFromLocationName(destination, 1);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            //Saving the new geolocation on the location object
-            Address address = addressList.get(0);
-            endLocation = new LatLng(address.getLatitude(), address.getLongitude());
-
-            //Search for the route
-            String url = getMapsApiDirectionsUrl(startLocation, endLocation, MODE_DRIVING);
-            ReadTask downloadTask = new ReadTask();
-            downloadTask.execute(url);
-
-            //Re-call the map with the new location
-            customAddMarker(endLocation, destination, destination);
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(endLocation, defaultZoom));
-            mMap.setMyLocationEnabled(false);
-
-            // Display popup on which point
-            mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
-
-                @Override
-                public View getInfoWindow(Marker marker) {
-                    return null;
-                }
-
-                @Override
-                public View getInfoContents(Marker marker) {
-
-                    View v = null;
-
-                    if(!marker.getPosition().equals(startLocation)){
-                        // Getting view from the layout file
-                        v = getLayoutInflater().inflate(R.layout.googlemaps_popup, null);
-
-                        TextView title = (TextView) v.findViewById(R.id.txt_Title);
-                        title.setText(marker.getSnippet());
-                        marker.getPosition();
-                    }
-
-                    return v;
-                }
-
-            });
-            */
-        }
-    }
-
-    public boolean searchForRoom(String room){
-        RoomDataSource roomDataSource = new RoomDataSource(this);
-        ArrayList<Room> roomList;
-
-        roomList = roomDataSource.getAllRooms();
-
-        for(int index = 0; index < roomList.size(); index++){
-            if (roomList.get(index).getRoomName().equalsIgnoreCase(room)) {
-
-                //WebServiceConnection webServiceConnection = new WebServiceConnection(this,3,roomList.get(index).getRoomID());
-                //webServiceConnection.checkServiceConnAST.execute();
-
-                HardCodeDB hardCodeDB = new HardCodeDB();
-                building = hardCodeDB.ResolvePath(roomList.get(index).getRoomID(),false);
-                return true;
-            }
-        }
-        return false;
 
     }
 
-    public void customAddMarker(LatLng latLng, String title, String snippet) {
+    public void customAddMarker() {
         MarkerOptions options = new MarkerOptions();
-        options.position(latLng)
-                .title(title)
-                .snippet(snippet)
+        options.position(new LatLng(globalObject.getBuildingLatitude(), globalObject.getBuildingLongitude()))
+                .title(globalObject.getBuildingName())
                 .draggable(true)
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
         mMap.addMarker(options);
@@ -325,7 +263,7 @@ public class GoogleMapActivity extends FragmentActivity {
 
             // traversing through routes
             for (int i = 0; i < routes.size(); i++) {
-                points = new ArrayList<LatLng>();
+                points = new ArrayList<>();
                 polyLineOptions = new PolylineOptions();
                 List<HashMap<String, String>> path = routes.get(i);
 

@@ -7,11 +7,12 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import codefactory.centralwayfinderproject.R;
+import codefactory.centralwayfinderproject.helpers.WebServiceConnection;
+import codefactory.centralwayfinderproject.models.GlobalObject;
 import codefactory.centralwayfinderproject.models.Room;
 
 /**
@@ -65,7 +66,7 @@ public class ServiceAdapter extends BaseAdapter {
      * @return A View corresponding to the data at the specified position.
      */
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
 
         View view = convertView;
         if (view == null) {
@@ -83,17 +84,23 @@ public class ServiceAdapter extends BaseAdapter {
             case "Ca":
                 viewHolder.icon.setImageResource(R.mipmap.ic_cafe);
                 break;
-            case "Gym":
+            case "Gy":
                 viewHolder.icon.setImageResource(R.mipmap.ic_gym);
                 break;
-            case "Bookshop":
+            case "Is":
+                viewHolder.icon.setImageResource(R.mipmap.ic_international_student);
+                break;
+            case "Bo":
                 viewHolder.icon.setImageResource(R.mipmap.ic_bookshop);
                 break;
-            case "Library":
+            case "Li":
                 viewHolder.icon.setImageResource(R.mipmap.ic_library);
                 break;
-            case "Koolark":
+            case "Ko":
                 viewHolder.icon.setImageResource(R.mipmap.ic_koolark);
+                break;
+            case "Ss":
+                viewHolder.icon.setImageResource(R.mipmap.ic_central_web);
                 break;
             default:
                 viewHolder.icon.setImageResource(R.mipmap.ic_default);
@@ -103,7 +110,17 @@ public class ServiceAdapter extends BaseAdapter {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, "You Clicked " + viewHolder.text.getText(), Toast.LENGTH_SHORT).show();
+                //Getting building information
+                WebServiceConnection webServiceConnection = new WebServiceConnection(context,3,serviceList.get(position));
+                webServiceConnection.execute();
+
+                // Calling Application class (see application tag in AndroidManifest.xml)
+                GlobalObject globalObject = (GlobalObject) context.getApplicationContext();
+
+                //Copying building details into globalObject
+                globalObject.setBuildingID(serviceList.get(position).getBuildingID());
+                globalObject.setRoomName(serviceList.get(position).getRoomName());
+                globalObject.setRoomID(serviceList.get(position).getRoomID());
             }
         });
 

@@ -2,12 +2,11 @@ package codefactory.centralwayfinderproject.activites;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import codefactory.centralwayfinderproject.R;
 
@@ -36,27 +35,28 @@ public class TermsActivity extends ActionBarActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+        Intent intent;
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_icon1) {
-            Intent intent = new Intent(this, MenuActivity.class);
+            intent = new Intent(this, MenuActivity.class);
             startActivity(intent);
             return true;
         }
         if (id == R.id.action_icon2) {
-            Toast.makeText(getApplicationContext(), "Missing Implementation1...",
-                    Toast.LENGTH_LONG).show();
+            intent = new Intent(this, ServiceActivity.class);
+            startActivity(intent);
             return true;
         }
         if (id == R.id.action_icon3) {
             Uri uri = Uri.parse("http://central.wa.edu.au/Pages/default.aspx"); // missing 'http://' will cause crash
-            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            intent = new Intent(Intent.ACTION_VIEW, uri);
             startActivity(intent);
             return true;
         }
         if (id == R.id.action_icon4) {
-            Toast.makeText(getApplicationContext(), "Missing Implementation3...",
-                    Toast.LENGTH_LONG).show();
+            intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
             return true;
         }
 

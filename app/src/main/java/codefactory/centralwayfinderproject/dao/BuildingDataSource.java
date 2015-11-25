@@ -36,7 +36,7 @@ public class BuildingDataSource {
         values.put(dbHelper.COLUMN_BUILDING_IMAGE, object.getImage());
         values.put(dbHelper.COLUMN_BUILDING_NAME, object.getName());
         values.put(dbHelper.COLUMN_BUILDING_LONGITUDE, object.getLongitude());
-        values.put(dbHelper.COLUMN_BUILDING_LATITUDE, object.getLongitude());
+        values.put(dbHelper.COLUMN_BUILDING_LATITUDE, object.getLatitude());
 
         database.insert(dbHelper.TABLE_BUILDING, null, values);
         Log.d("INSERT BUILDING", object.toString());
@@ -47,12 +47,12 @@ public class BuildingDataSource {
     /**
      * Get all elements from Room table
      */
-    public Building getBuilding(int buildinID){
+    public Building getBuilding(int buildingID){
         Building building = null;
 
         database = dbHelper.getReadableDatabase();
 
-        Cursor res = database.rawQuery(dbHelper.SQL_SELECT_TABLE_BUILDING + " WHERE " + dbHelper.COLUMN_BUILDING_ID + " = " + buildinID, null);
+        Cursor res = database.rawQuery(dbHelper.SQL_SELECT_TABLE_BUILDING + " WHERE " + dbHelper.COLUMN_BUILDING_ID + " = " + buildingID, null);
         res.moveToFirst();
 
         if(res.getCount() > 0) {

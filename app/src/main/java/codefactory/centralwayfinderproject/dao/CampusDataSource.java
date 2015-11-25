@@ -49,6 +49,26 @@ public class CampusDataSource {
     }
 
     /**
+     * Update campus object on the table Campus
+     */
+    public void updateCampus(Campus objCampus){
+        database = dbHelper.getWritableDatabase();
+        // Create a new map of values, where column names are the keys
+        ContentValues values = new ContentValues();
+        values.put(dbHelper.COLUMN_ID, objCampus.getCampusID());
+        values.put(dbHelper.COLUMN_NAME, objCampus.getCampusName());
+        values.put(dbHelper.COLUMN_VERSION, objCampus.getCampusVersion());
+        values.put(dbHelper.COLUMN_LONG, objCampus.getCampusLong());
+        values.put(dbHelper.COLUMN_LAT, objCampus.getCampusLat());
+        values.put(dbHelper.COLUMN_ZOOM, objCampus.getCampusZoom());
+
+        database.update(dbHelper.TABLE_CAMPUS, values, dbHelper.COLUMN_ID + " = ?", new String[]{objCampus.getCampusID()});
+        Log.d("UPDATE CAMPUS" ,objCampus.toString());
+        close();
+
+    }
+
+    /**
      * Get all elements from Campus table
      */
     public ArrayList<Campus> getAllCampus(){
@@ -94,5 +114,12 @@ public class CampusDataSource {
 
         close();
         return result;
+    }
+
+    public void dropTable(){
+        database = dbHelper.getWritableDatabase();
+
+        database.execSQL(dbHelper.SQL_DROP_TABLE_ROOM);
+        database.execSQL(dbHelper.SQL_CREATE_TABLE_ROOM);
     }
 }

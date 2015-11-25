@@ -1,12 +1,15 @@
 package codefactory.centralwayfinderproject.activites;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
@@ -29,11 +32,14 @@ import java.util.ArrayList;
 
 import codefactory.centralwayfinderproject.R;
 import codefactory.centralwayfinderproject.helpers.MultiTouch;
+import codefactory.centralwayfinderproject.models.GlobalObject;
 
 public class IndoorMapsActivity extends AppCompatActivity {
     private MultiTouch img;
     ArrayList<Bitmap> images;
     int currentMap;
+    private Toolbar toolbar;
+    private GlobalObject globalObject;
 
 
     public void displayToast(String s){
@@ -49,27 +55,30 @@ public class IndoorMapsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_indoor_maps);
 
+        toolbar = (Toolbar) findViewById(R.id.tool_bar);
+        setSupportActionBar(toolbar);
+
         //Initalise arraylist
         images = new ArrayList<>();
 
-        // Changed in XML
         img = (MultiTouch) findViewById(R.id.mapMultiTouch);
-
-        //img.setImageResource(R.drawable.drow);
         img.setMaxZoom(8f);
 
-        // Create an object for subclass of AsyncTask
+        globalObject = (GlobalObject) getApplicationContext();
         GetXMLTask task = new GetXMLTask();
-        // Execute the task
-        //task.execute(new String[]{"http://student.mydesign.central.wa.edu.au/cf_Wayfinding_WebService/WF_Service.svc/getImage?path=/Img/drow.jpg"});
 
-        /*
-            Change 18/9, Multiple images
-        */
-        String[] imageURL = {"C:\\Inetpub\\vhosts\\student.mydesign.central.wa.edu.au\\httpdocs\\cf_Wayfinding_WebService\\/Img/TEST635828700889137027.png"};
+        breakString(globalObject.getMaps());
+
+        String[] imageURL = new String[globalObject.getMaps().size()-1];
+        int aux = 0;
+        for (int x = 0; x < globalObject.getMaps().size(); x++){
+            if(globalObject.getMaps().get(x).contains("C:")){
+                imageURL[aux] = globalObject.getMaps().get(x);
+                aux++;
+            }
+        }
+
         task.execute(imageURL);
-        //string : C:\Inetpub\vhosts\student.mydesign.central.wa.edu.au\httpdocs\cf_Wayfinding_WebService\/Img/PE0301635824266396694365.png
-        //img.setImageResource(R.mipmap.resultpath);
     }
 
     @Override
@@ -93,9 +102,8 @@ public class IndoorMapsActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_indoor_maps, menu);
+        getMenuInflater().inflate(R.menu.menu_menu, menu);
         return true;
     }
 
@@ -105,9 +113,28 @@ public class IndoorMapsActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+        Intent intent;
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_icon1) {
+            intent = new Intent(this, MenuActivity.class);
+            startActivity(intent);
+            return true;
+        }
+        if (id == R.id.action_icon2) {
+            intent = new Intent(this, ServiceActivity.class);
+            startActivity(intent);
+            return true;
+        }
+        if (id == R.id.action_icon3) {
+            Uri uri = Uri.parse("http://central.wa.edu.au/Pages/default.aspx"); // missing 'http://' will cause crash
+            intent = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(intent);
+            return true;
+        }
+        if (id == R.id.action_icon4) {
+            intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
             return true;
         }
 
@@ -142,24 +169,17 @@ public class IndoorMapsActivity extends AppCompatActivity {
 
         // Creates Bitmap from InputStream and returns it
         private Bitmap downloadImage(String imgpath) {
-
-
             //initiales stuff
             Bitmap bitmap = null;
             InputStream stream = null;
             BitmapFactory.Options bmOptions = new BitmapFactory.Options();
             bmOptions.inSampleSize = 1;
-
-
-
-
             try {
 
                 String NAMESPACE = "http://tempuri.org/";
                 String METHOD_NAME = "getImage";
                 String SOAP_ACTION = "http://tempuri.org/WF_Service_Interface/"+METHOD_NAME;
                 String WEB_SERVICE_URL ="http://student.mydesign.central.wa.edu.au/cf_Wayfinding_WebService/WF_Service.svc";
-
 
                 // sets up soap objects
                 SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
@@ -169,31 +189,23 @@ public class IndoorMapsActivity extends AppCompatActivity {
                 Envelope.dotNet = true;
                 Envelope.setOutputSoapObject(request);
 
-
                 //calls the webservice
                 HttpTransportSE transport = new HttpTransportSE(WEB_SERVICE_URL);
                 transport.call(SOAP_ACTION, Envelope);
                 SoapPrimitive response = (SoapPrimitive) Envelope.getResponse();
-
-
-                //SoapObject response = (SoapObject)Envelope.bodyIn;
 
                 //creates image from byte array response
                 stream =  new ByteArrayInputStream( Base64.decode(response.toString(),Base64.DEFAULT));
                 bitmap = BitmapFactory.
                         decodeStream(stream, null, bmOptions);
 
-
                 stream.close();
             } catch (Exception e1) {
                 e1.printStackTrace();
-
             }
 
             return bitmap;
         }
-
-
     }
 
     /*
@@ -202,7 +214,6 @@ public class IndoorMapsActivity extends AppCompatActivity {
     public void imageBack(View v){
 
         if(currentMap>0){
-
             currentMap--;
             img.setImageBitmap(images.get(currentMap));
 
@@ -218,13 +229,38 @@ public class IndoorMapsActivity extends AppCompatActivity {
     public void imageFwd(View v){
 
         if(currentMap < images.size() -1){
-
             currentMap++;
             img.setImageBitmap(images.get(currentMap));
 
         }else{
             displayToast("No Next map");
         }
+
+    }
+
+    public void breakString(ArrayList<String> text){
+         ArrayList<String> tempResult = new ArrayList();
+        ArrayList<String> result = new ArrayList();
+
+        //String[] parts = text.split("=");
+        for (int x = 0; x < text.size(); x++){
+            for (String item : text.get(x).split("="))
+            {
+                for (String aux : item.split(";")){
+                    tempResult.add(aux);
+                }
+            }
+        }
+
+        for (int x = 0; x < tempResult.size(); x++){
+            String temp = tempResult.get(x);
+
+            if(!temp.contains("{") && !temp.contains("}") && !temp.contains("string")){
+                result.add(temp);
+            }
+        }
+
+        globalObject.setMaps(result);
 
     }
 }

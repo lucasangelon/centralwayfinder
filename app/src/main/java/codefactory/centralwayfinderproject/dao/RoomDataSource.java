@@ -80,7 +80,7 @@ public class RoomDataSource {
         database = dbHelper.getReadableDatabase();
 
         /* NEED TO CHANGE SQL QUERY */
-        Cursor res = database.rawQuery(dbHelper.SQL_SELECT_TABLE_ROOM,null);
+        Cursor res = database.rawQuery(dbHelper.SQL_SELECT_TABLE_ROOM + " WHERE "+dbHelper.COLUMN_ROOM_IMAGE+" != 'NoImage'",null);
         res.moveToFirst();
 
         while (res.isAfterLast()==false){
