@@ -11,14 +11,11 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
@@ -43,15 +40,7 @@ public class IndoorMapsActivity extends AppCompatActivity {
     private GlobalObject globalObject;
     private Useful useful;
     private RelativeLayout btnPainel;
-
-
-    public void displayToast(String s){
-        //shortcut for making toast, includes code to centre test
-        Toast toast = Toast.makeText(this, s, Toast.LENGTH_SHORT);
-        TextView tv = (TextView) toast.getView().findViewById(android.R.id.message);
-        if( tv != null) tv.setGravity(Gravity.CENTER);
-        toast.show();
-    }
+    private Button next, previous;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +56,8 @@ public class IndoorMapsActivity extends AppCompatActivity {
         images = new ArrayList<>();
 
         btnPainel =(RelativeLayout) findViewById(R.id.nextPanel);
+        next =(Button)findViewById(R.id.buttonNext);
+        previous =(Button)findViewById(R.id.buttonBack);
         img = (MultiTouch) findViewById(R.id.mapMultiTouch);
         img.setMaxZoom(8f);
 
@@ -218,7 +209,6 @@ public class IndoorMapsActivity extends AppCompatActivity {
                 stream.close();
             } catch (Exception e1) {
                 e1.printStackTrace();
-
             }
 
             return bitmap;
@@ -230,14 +220,13 @@ public class IndoorMapsActivity extends AppCompatActivity {
      */
     public void imageBack(View v){
 
-        if(currentMap>0){
+        if(currentMap > 0){
             currentMap--;
             img.setImageBitmap(images.get(currentMap));
-
+            previous.setVisibility(View.VISIBLE);
         }else{
-            displayToast("No previous map");
+            previous.setVisibility(View.GONE);
         }
-
     }
 
     /*
@@ -248,18 +237,16 @@ public class IndoorMapsActivity extends AppCompatActivity {
         if(currentMap < images.size() -1){
             currentMap++;
             img.setImageBitmap(images.get(currentMap));
-
+            next.setVisibility(View.VISIBLE);
         }else{
-            displayToast("No Next map");
+            next.setVisibility(View.GONE);
         }
-
     }
 
     public void breakString(ArrayList<String> text){
-         ArrayList<String> tempResult = new ArrayList();
+        ArrayList<String> tempResult = new ArrayList();
         ArrayList<String> result = new ArrayList();
 
-        //String[] parts = text.split("=");
         for (int x = 0; x < text.size(); x++){
             for (String item : text.get(x).split("="))
             {
@@ -278,6 +265,5 @@ public class IndoorMapsActivity extends AppCompatActivity {
         }
 
         globalObject.setMaps(result);
-
     }
 }

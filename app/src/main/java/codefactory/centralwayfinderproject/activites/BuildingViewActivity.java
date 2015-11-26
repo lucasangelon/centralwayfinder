@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -123,7 +124,14 @@ public class BuildingViewActivity extends AppCompatActivity implements View.OnCl
         @Override
         protected Bitmap doInBackground(String... urls) {
             Bitmap image = null;
+            Log.d("START",".....");
             image = downloadImage(urls[0]);
+            /*try {
+                image = BitmapFactory.decodeStream((InputStream) new URL(urls[0]).getContent());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }*/
+            Log.d("END",".....");
             return image;
         }
 
