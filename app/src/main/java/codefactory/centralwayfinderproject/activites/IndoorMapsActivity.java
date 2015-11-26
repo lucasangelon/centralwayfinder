@@ -11,12 +11,12 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +32,7 @@ import java.util.ArrayList;
 
 import codefactory.centralwayfinderproject.R;
 import codefactory.centralwayfinderproject.helpers.MultiTouch;
+import codefactory.centralwayfinderproject.helpers.Useful;
 import codefactory.centralwayfinderproject.models.GlobalObject;
 
 public class IndoorMapsActivity extends AppCompatActivity {
@@ -40,6 +41,8 @@ public class IndoorMapsActivity extends AppCompatActivity {
     int currentMap;
     private Toolbar toolbar;
     private GlobalObject globalObject;
+    private Useful useful;
+    private RelativeLayout btnPainel;
 
 
     public void displayToast(String s){
@@ -55,12 +58,15 @@ public class IndoorMapsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_indoor_maps);
 
+        useful = new Useful(this);
+
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
 
         //Initalise arraylist
         images = new ArrayList<>();
 
+        btnPainel =(RelativeLayout) findViewById(R.id.nextPanel);
         img = (MultiTouch) findViewById(R.id.mapMultiTouch);
         img.setMaxZoom(8f);
 
@@ -69,7 +75,7 @@ public class IndoorMapsActivity extends AppCompatActivity {
 
         breakString(globalObject.getMaps());
 
-        String[] imageURL = new String[globalObject.getMaps().size()-1];
+        String[] imageURL = new String[globalObject.getMaps().size()/2];
         int aux = 0;
         for (int x = 0; x < globalObject.getMaps().size(); x++){
             if(globalObject.getMaps().get(x).contains("C:")){
@@ -141,39 +147,49 @@ public class IndoorMapsActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     *
-     */
-    private class GetXMLTask extends AsyncTask<String, Void, String> {
-        @Override
+    private class GetXMLTask extends AsyncTask<String, Void, Bitmap[]> {
 
-        // herp derp downloads images
-        protected String doInBackground(String... urls) {
-            Bitmap map = null;
-            for (String url : urls) {
-                Log.d("Stuff",url);
-                map = downloadImage(url);
-                //Adds to array list of bitmaps
-                images.add(map);
-                Log.d("Stuff", "Download finished");
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            useful.displayLoadingMessage();
+        }
+
+        @Override
+        protected Bitmap[] doInBackground(String... urls) {
+            Bitmap[] image = new Bitmap[urls.length];
+
+            for (int x = 0; x<urls.length; x++){
+                image[x] = downloadImage(urls[x]);
             }
-            return "I couldnt work this out";
+            return image;
         }
 
         // Sets the Bitmap returned by doInBackground
-        protected void onPostExecute(String success) {
+        @Override
+        protected void onPostExecute(Bitmap[] image) {
+            useful.disappearLoadingMessage();
+
+            for (Bitmap img : image) {
+                images.add(img);
+            }
+
+            if(image.length > 1){
+                btnPainel.setVisibility(View.VISIBLE);
+            }
+
             img.setImageBitmap(images.get(0));
             currentMap = 0;
-            Log.d("onPost","Got here!");
         }
 
         // Creates Bitmap from InputStream and returns it
         private Bitmap downloadImage(String imgpath) {
-            //initiales stuff
+
             Bitmap bitmap = null;
             InputStream stream = null;
             BitmapFactory.Options bmOptions = new BitmapFactory.Options();
             bmOptions.inSampleSize = 1;
+
             try {
 
                 String NAMESPACE = "http://tempuri.org/";
@@ -195,13 +211,14 @@ public class IndoorMapsActivity extends AppCompatActivity {
                 SoapPrimitive response = (SoapPrimitive) Envelope.getResponse();
 
                 //creates image from byte array response
-                stream =  new ByteArrayInputStream( Base64.decode(response.toString(),Base64.DEFAULT));
+                stream =  new ByteArrayInputStream( Base64.decode(response.toString(), Base64.DEFAULT));
                 bitmap = BitmapFactory.
                         decodeStream(stream, null, bmOptions);
 
                 stream.close();
             } catch (Exception e1) {
                 e1.printStackTrace();
+
             }
 
             return bitmap;

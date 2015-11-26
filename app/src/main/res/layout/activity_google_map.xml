@@ -1,5 +1,6 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -24,15 +25,34 @@
             android:layout_gravity="center" />
     </LinearLayout>
 
-    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        tools:context="codefactory.centralwayfinder.activities.SearchActivity">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/map_fragment_layout"
+        android:layout_above="@+id/topBar"
+        android:layout_weight="0.99">
+        <fragment
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            tools:context="codefactory.centralwayfinder.activities.GoogleMapActivity">
 
-    </fragment>
+        </fragment>
+
+    </LinearLayout>
+    <!-- This is where we add our custom toolbar to the pages-->
+    <codefactory.centralwayfinderproject.helpers.MyCustomToolbar
+        android:id="@+id/tool_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#f2f2f2">
+    </codefactory.centralwayfinderproject.helpers.MyCustomToolbar>
+
+
 
 
 

@@ -130,7 +130,7 @@ public class BuildingViewActivity extends AppCompatActivity implements View.OnCl
         // Sets the Bitmap returned by doInBackground
         protected void onPostExecute(Bitmap image) {
             util.disappearLoadingMessage();
-            if(!image.equals(null)){
+            if(image != null){
                 Drawable picture = new BitmapDrawable(getResources(), image);
                 img.setBackgroundDrawable(picture);
             }
