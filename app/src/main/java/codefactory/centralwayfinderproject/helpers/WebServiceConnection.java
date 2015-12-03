@@ -44,6 +44,7 @@ public class WebServiceConnection  extends AsyncTask<String, Void, Void> {
     private final String METHOD_GET_ROOMS_BY_CAMPUS = "SearchRooms";
     private final String METHOD_GET_BUILDING_BY_ROOM = "ResolvePath";
     private final String METHOD_GET_CAMPUS_VERSION = "CampusVersion";
+    private final String METHOD_DELETE_IMAGE = "deleteImages";
 
     //Variables
     boolean checkServiceResult = true;
@@ -113,6 +114,9 @@ public class WebServiceConnection  extends AsyncTask<String, Void, Void> {
                     break;
                 case 3:
                     getBuildingByRoomFromWebService();
+                    break;
+                case 4:
+                    deleteImagesFromWebService();
                     break;
 
             }
@@ -374,6 +378,27 @@ public class WebServiceConnection  extends AsyncTask<String, Void, Void> {
                 roomDataSource.insertRoom(room);
             }
             Log.d(METHOD_GET_ROOMS_BY_CAMPUS, "SUCCESS");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.d(METHOD_GET_ROOMS_BY_CAMPUS, "FAIL");
+        }
+
+    }
+
+    public void deleteImagesFromWebService() {
+        //Variables declaration
+
+
+        request = new SoapObject(NAMESPACE, METHOD_DELETE_IMAGE);
+
+        request.addProperty("urls", globalObject.getMaps());
+
+        getEnvelope(METHOD_DELETE_IMAGE);
+
+        try {
+            soapResult.getPropertyCount();
+            Log.d(METHOD_DELETE_IMAGE, "SUCCESS");
 
         } catch (Exception e) {
             e.printStackTrace();

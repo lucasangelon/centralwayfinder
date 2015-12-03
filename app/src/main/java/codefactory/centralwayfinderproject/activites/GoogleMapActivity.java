@@ -11,6 +11,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,7 +37,6 @@ import codefactory.centralwayfinderproject.R;
 import codefactory.centralwayfinderproject.helpers.HttpConnection;
 import codefactory.centralwayfinderproject.helpers.PathJSONParser;
 import codefactory.centralwayfinderproject.helpers.Useful;
-import codefactory.centralwayfinderproject.models.Campus;
 import codefactory.centralwayfinderproject.models.GlobalObject;
 
 /**
@@ -44,16 +44,12 @@ import codefactory.centralwayfinderproject.models.GlobalObject;
  */
 public class GoogleMapActivity extends AppCompatActivity {
 
-    private GlobalObject globalObject;
-    private Campus pointOne;
-    private Float defaultZoom = 15.0f;
-    private GoogleMap mMap; // Might be null if Google Play services APK is not available.
-    private final static String MODE_DRIVING = "driving";
-    private final static String MODE_WALKING = "walking";
-    private Useful util;
-    private LatLng startLocation;
-    private LatLng endLocation;
+    private SupportMapFragment mapFrag;
+    private GoogleMap map;
     private Toolbar toolbar;
+    private GlobalObject globalObject;
+    private Useful util;
+    private ArrayList<LatLng> pins = new ArrayList();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,58 +59,49 @@ public class GoogleMapActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
 
-        // Calling Application class (see application tag in AndroidManifest.xml)
-        //This object holds information about building and room which the user are looking for.
-        globalObject = (GlobalObject) getApplicationContext();
+        /*GoogleMapOptions options = new GoogleMapOptions();
+        options.zOrderOnTop(true);
+        options.liteMode(true);
+        options.mapToolbarEnabled(true);
+        mapFrag = SupportMapFragment.newInstance(options);*/
 
-        pointOne = new Campus();
-        util = new Useful(this);
 
-        if(util.isGpsOn()){
-            //Get current location position
-            pointOne.setCampusLat(util.getUserLocation().getLatitude());
-            pointOne.setCampusLong(util.getUserLocation().getLongitude());
-
-        } else {
-            //Loading campus details from preference file.
-            pointOne = util.getDefaultCampus();
-
+        if (checkGoogleMapsInstallation()) {
+            map = mapFrag.getMap();
+            //map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+            configMap();
+            drawingRoute();
         }
 
-        startLocation = new LatLng(pointOne.getCampusLat(), pointOne.getCampusLong());
-        endLocation = new LatLng(globalObject.getBuildingLatitude(), globalObject.getBuildingLongitude());
 
-        if (setUpMapIfNeeded()){
-            //Search for the route
-            String url = getMapsApiDirectionsUrl(startLocation, endLocation, MODE_DRIVING);
-            ReadTask downloadTask = new ReadTask();
-            downloadTask.execute(url);
-
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(endLocation, defaultZoom));
-            mMap.setMyLocationEnabled(false);
-            createPopUpDetailing();
-        }
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
-        setUpMapIfNeeded();
     }
 
-    private void createPopUpDetailing() {
-        // Display popup on which point
-        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+
+    public void configMap() {
+
+        globalObject = (GlobalObject) getApplicationContext();
+        util = new Useful(this);
+
+        showPoints();
+
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(pins.get(1), 15)); //Focus and Zoom
+        // EVENTS
+        // Manages the click in popup option
+        map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
-                //Go to BuildingView
                 Intent intent = new Intent(getApplicationContext(), BuildingViewActivity.class);
                 startActivity(intent);
             }
         });
 
-        //SetUP popup INFORMATION
-        mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+        //Creates popup INFORMATION
+        map.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
             @Override
             public View getInfoWindow(Marker marker) {
                 return null;
@@ -124,11 +111,11 @@ public class GoogleMapActivity extends AppCompatActivity {
             public View getInfoContents(Marker marker) {
 
                 View v = null;
-                if (!marker.getPosition().equals(startLocation)) {
+                if (!marker.getPosition().equals(pins.get(0))) {
                     // Getting view from the layout file
                     v = getLayoutInflater().inflate(R.layout.googlemaps_popup, null);
                     TextView title = (TextView) v.findViewById(R.id.txt_Title);
-                    title.setText(globalObject.getBuildingName() + "\n" + globalObject.getRoomName());
+                    title.setText(Html.fromHtml("<b><font color='#000000'>" + globalObject.getBuildingName() + "<br/>" + globalObject.getRoomName() + "</font></b>"));
                     marker.getPosition();
                 }
                 return v;
@@ -136,103 +123,102 @@ public class GoogleMapActivity extends AppCompatActivity {
         });
     }
 
-    private boolean setUpMapIfNeeded() {
-        boolean result = false;
-        // Do a null check to confirm that we have not already instantiated the map.
-        if (mMap == null){
-            // Try to obtain the map from the SupportMapFragment.
-            mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
+    /**
+     * Initiate the map and also checking for google map app and version installed on the phone
+     * @return boolean
+     */
+    public boolean checkGoogleMapsInstallation() {
+        boolean result = true;
 
-            if(isGoogleMapsInstalled()){
-                if (mMap != null){
-                    setUpMap();
-                    result = true;
+        mapFrag = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+
+        if (!isGoogleMapsInstalled()) {//Display a msg if google map is not found
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("Install Google Maps");
+            builder.setCancelable(false);
+            builder.setPositiveButton("Install", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.google.android.apps.maps"));
+                    startActivity(intent);
+                    //Finish the activity
+                    finish();
                 }
-                else{
-                    result = false;
-                }
-            }
-            else{ //Display a msg if google map is not found
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setMessage("Install Google Maps");
-                builder.setCancelable(false);
-                builder.setPositiveButton("Install",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.google.android.apps.maps"));
-                                startActivity(intent);
-                                //Finish the activity so they can't circumvent the check
-                                finish();
-                            }
-                        });
-                AlertDialog dialog = builder.create();
-                dialog.show();
-                result = false;
-            }
+            });
+            AlertDialog dialog = builder.create();
+            dialog.show();
+            result = false;
         }
         return result;
     }
 
     /**
-     * Check if Google maps is installed on the phone
+     * Checked if Google maps is installed on the phone
      * @return boolean
      */
-
-    public boolean isGoogleMapsInstalled()
-    {
-        try{
-            ApplicationInfo info = getPackageManager().getApplicationInfo("com.google.android.apps.maps", 0 );
+    public boolean isGoogleMapsInstalled() {
+        try {
+            ApplicationInfo info = getPackageManager().getApplicationInfo("com.google.android.apps.maps", 0);
             return true;
-        }
-        catch(PackageManager.NameNotFoundException e){
+        } catch (PackageManager.NameNotFoundException e) {
             return false;
         }
     }
 
     /**
-     * This is where we draw the map for the first time
-     * This should only be called once
+     * Define start point and final point to draw on the map
+     * @return Boolean
      */
-    private void setUpMap() {
+    public void showPoints() {
 
-        mMap.addMarker(
+        if(util.isGpsOn()&&(util.getUserLocation()!= null)){
+            pins.add(new LatLng(util.getUserLocation().getLatitude(),util.getUserLocation().getLongitude()));//Starting Point
+
+        } else {
+            pins.add(new LatLng(util.getLatitudeDefaultCampus(),util.getLongitudeDefaultCampus()));//Starting Point
+        }
+
+        pins.add(new LatLng(globalObject.getBuildingLatitude(), globalObject.getBuildingLongitude()));// Destination Point
+
+        //Drawing point one
+        map.addMarker(
                 new MarkerOptions()
-                        .position(startLocation)
-                        .title(pointOne.getCampusName())
-                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                        .position(pins.get(0))
+                        .title("Start Location")
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
+        );
 
-        customAddMarker();
-
-
+        //Drawing point two
+        map.addMarker(
+                new MarkerOptions()
+                        .position(pins.get(1))
+                        .title(globalObject.getBuildingName())
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
+        );
     }
 
-    public void customAddMarker() {
-        MarkerOptions options = new MarkerOptions();
-        options.position(new LatLng(globalObject.getBuildingLatitude(), globalObject.getBuildingLongitude()))
-                .title(globalObject.getBuildingName())
-                .draggable(true)
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-        mMap.addMarker(options);
+    public void drawingRoute(){
+        //Search for the route between points
+        ReadTask getRoute = new ReadTask();
+        getRoute.execute();
     }
 
-    private String getMapsApiDirectionsUrl(LatLng start, LatLng end, String mode) {
-        String url = "http://maps.googleapis.com/maps/api/directions/json?"
-                + "origin=" + start.latitude + "," + start.longitude
-                + "&destination=" + end.latitude + "," + end.longitude
-                + "&sensor=false&units=metric&mode=" + mode;
-        Log.d("url", url);
-        return url;
-    }
 
     private class ReadTask extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... url) {
+
             String data = "";
+            String googleUrl = "http://maps.googleapis.com/maps/api/directions/json?"
+                    + "origin=" + pins.get(0).latitude + "," + pins.get(0).longitude
+                    + "&destination=" + pins.get(1).latitude + "," + pins.get(1).longitude
+                    + "&sensor=false&units=metric&mode=driving";
+            Log.d("Google Maps URL", googleUrl);
             try {
                 HttpConnection http = new HttpConnection();
-                data = http.readUrl(url[0]);
+                data = http.readUrl(googleUrl);
             } catch (Exception e) {
-                Log.d("Background Task", e.toString());
+                Log.d("Exception ReadTask", e.toString());
             }
             return data;
         }
@@ -240,11 +226,11 @@ public class GoogleMapActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            new ParserTask().execute(result);
+            new BreakingReturnTask().execute(result);
         }
     }
 
-    private class ParserTask extends
+    private class BreakingReturnTask extends
             AsyncTask<String, Integer, List<List<HashMap<String, String>>>> {
 
         @Override
@@ -283,32 +269,25 @@ public class GoogleMapActivity extends AppCompatActivity {
 
                     points.add(position);
                 }
-
                 polyLineOptions.addAll(points);
                 polyLineOptions.width(10);
                 polyLineOptions.color(Color.BLUE);
             }
-
-            mMap.addPolyline(polyLineOptions);
+            map.addPolyline(polyLineOptions);
         }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_menu, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         Intent intent;
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_icon1) {
             intent = new Intent(this, MenuActivity.class);
             startActivity(intent);
@@ -333,6 +312,4 @@ public class GoogleMapActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
-
 }

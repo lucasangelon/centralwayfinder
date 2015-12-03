@@ -48,7 +48,7 @@ public class IndoorMapsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_indoor_maps);
 
         useful = new Useful(this);
-
+        
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
 
@@ -79,22 +79,25 @@ public class IndoorMapsActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStart()
-    {
+    protected void onStart(){
         super.onStart();
-        final Dialog dialog = new Dialog(this);
-        dialog.setContentView(R.layout.activity_overlay);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
 
-        Button button = (Button) dialog.findViewById(R.id.Button01);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-            }
-        });
+        if(useful.getIsFirstIndoorMap()) {
+            final Dialog dialog = new Dialog(this);
+            dialog.setContentView(R.layout.activity_overlay);
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
 
-        dialog.show();
+            Button button = (Button) dialog.findViewById(R.id.Button01);
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dialog.dismiss();
+                }
+            });
+
+            dialog.show();
+            useful.setIsFirstIndoorMap(false);
+        }
     }
 
     @Override

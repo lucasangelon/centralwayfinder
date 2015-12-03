@@ -33,7 +33,7 @@
         android:id="@+id/imageView"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="30dp"
-        android:background="@mipmap/ic_default" />
+        android:background="#ffffff" />
 
     <TextView
         android:layout_gravity="center"
@@ -42,6 +42,7 @@
         android:id="@+id/txtBuilding"
         android:textSize="20dp"
         android:text="Building information"
+        android:layout_marginLeft="10dp"
         android:layout_below="@+id/imageView"
         android:layout_marginBottom="30dp"/>
 
@@ -60,7 +61,7 @@
             android:layout_height="wrap_content"
             android:textSize="20dp"
             android:layout_marginLeft="10dp"
-            android:text="GO TO LOCATION" />
+            android:text="Go to location" />
 
     </LinearLayout>
 

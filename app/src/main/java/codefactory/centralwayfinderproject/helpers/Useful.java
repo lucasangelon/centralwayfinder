@@ -50,6 +50,31 @@ public class Useful extends Application {
     }
 
     /**
+     * Method which gets default campus Latitude value from preference file "setting"
+     * @return - Double Lat
+     */
+    public Double getLatitudeDefaultCampus(){
+        double result;
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        result = Double.longBitsToDouble(prefs.getLong("campusLat", 0));
+
+        return result;
+    }
+
+    /**
+     * Method which gets default campus Longitude value from preference file "setting"
+     * @return - Double Lng
+     */
+    public Double getLongitudeDefaultCampus(){
+        double result;
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        result = Double.longBitsToDouble(prefs.getLong("campusLong", 0));
+
+        return result;
+    }
+
+
+    /**
      * Method which gets default campus values from preference file "setting"
      * with campus values
      * @return - object Campus
@@ -145,8 +170,28 @@ public class Useful extends Application {
      * Method which disappear with Loading Message on the screen
      */
     public void disappearLoadingMessage(){
+        pd.dismiss();
+    }
 
+    /**
+     * Method which get 'indoorMap' option at preference file "setting"
+     * @return boolean
+     */
+    public boolean getIsFirstIndoorMap(){
+        boolean result;
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 
-                pd.dismiss();
+        result =  prefs.getBoolean("indoorMap",true);
+
+        return result;
+    }
+
+    /**
+     * Method which set 'indoorMap' option at preference file "setting"
+     * @return void
+     */
+    public void setIsFirstIndoorMap(boolean value){
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        prefs.edit().putBoolean("indoorMap", value).commit();
     }
 }

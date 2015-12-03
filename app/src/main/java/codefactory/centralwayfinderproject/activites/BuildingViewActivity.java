@@ -10,22 +10,15 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Base64;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.ksoap2.SoapEnvelope;
-import org.ksoap2.serialization.SoapObject;
-import org.ksoap2.serialization.SoapPrimitive;
-import org.ksoap2.serialization.SoapSerializationEnvelope;
-import org.ksoap2.transport.HttpTransportSE;
-
-import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 
 import codefactory.centralwayfinderproject.R;
 import codefactory.centralwayfinderproject.helpers.Useful;
@@ -54,7 +47,7 @@ public class BuildingViewActivity extends AppCompatActivity implements View.OnCl
 
         if (!globalObject.getBuildingImage().equals(null) && !globalObject.getBuildingImage().equals("No Image")) {
             GetImageFromServer task = new GetImageFromServer();
-            task.execute(globalObject.getBuildingImage());
+            task.execute(globalObject.getBuildingImage().substring(globalObject.getBuildingImage().lastIndexOf("\\")));
         }
 
         txtBuilding.setText(globalObject.getBuildingName());
@@ -124,14 +117,11 @@ public class BuildingViewActivity extends AppCompatActivity implements View.OnCl
         @Override
         protected Bitmap doInBackground(String... urls) {
             Bitmap image = null;
-            Log.d("START",".....");
-            image = downloadImage(urls[0]);
-            /*try {
-                image = BitmapFactory.decodeStream((InputStream) new URL(urls[0]).getContent());
+            try {
+                image = BitmapFactory.decodeStream((InputStream) new URL("http://student.mydesign.central.wa.edu.au/cf_Wayfinding_WebService/" + urls[0]).getContent());
             } catch (IOException e) {
                 e.printStackTrace();
-            }*/
-            Log.d("END",".....");
+            }
             return image;
         }
 
@@ -143,49 +133,5 @@ public class BuildingViewActivity extends AppCompatActivity implements View.OnCl
                 img.setBackgroundDrawable(picture);
             }
         }
-
-        // Creates Bitmap from InputStream and returns it
-        private Bitmap downloadImage(String imgpath) {
-
-            Bitmap bitmap = null;
-            InputStream stream = null;
-            BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-            bmOptions.inSampleSize = 1;
-
-            try {
-
-                String NAMESPACE = "http://tempuri.org/";
-                String METHOD_NAME = "getImage";
-                String SOAP_ACTION = "http://tempuri.org/WF_Service_Interface/"+METHOD_NAME;
-                String WEB_SERVICE_URL ="http://student.mydesign.central.wa.edu.au/cf_Wayfinding_WebService/WF_Service.svc";
-
-                // sets up soap objects
-                SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
-                request.addProperty("path",imgpath);
-                SoapSerializationEnvelope Envelope = new SoapSerializationEnvelope(
-                        SoapEnvelope.VER11);
-                Envelope.dotNet = true;
-                Envelope.setOutputSoapObject(request);
-
-                //calls the webservice
-                HttpTransportSE transport = new HttpTransportSE(WEB_SERVICE_URL);
-                transport.call(SOAP_ACTION, Envelope);
-                SoapPrimitive response = (SoapPrimitive) Envelope.getResponse();
-
-                //creates image from byte array response
-                stream =  new ByteArrayInputStream( Base64.decode(response.toString(), Base64.DEFAULT));
-                bitmap = BitmapFactory.
-                        decodeStream(stream, null, bmOptions);
-
-                stream.close();
-            } catch (Exception e1) {
-                e1.printStackTrace();
-
-            }
-
-            return bitmap;
-        }
-
-
     }
 }
