@@ -13,7 +13,7 @@ import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
+import android.widget.ImageButton;
 
 import codefactory.centralwayfinderproject.R;
 import codefactory.centralwayfinderproject.helpers.Useful;
@@ -21,7 +21,7 @@ import codefactory.centralwayfinderproject.helpers.WebServiceConnection;
 
 public class SplashActivity extends Activity implements OnClickListener {
 
-    private Button btn_startApp;
+    private ImageButton btn_startApp;
     private boolean isFirstTime;
     WebServiceConnection webServiceConnection;
     Useful useful;
@@ -37,7 +37,7 @@ public class SplashActivity extends Activity implements OnClickListener {
         Log.d("FIRST TIME", Boolean.toString(isFirstTime));
 
         //Initialise Button and add listener
-        btn_startApp = (Button) findViewById(R.id.btnFirstClick);
+        btn_startApp = (ImageButton) findViewById(R.id.btnFirstClick);
         btn_startApp.setOnClickListener(this);
 
         //Checking Networking Connection

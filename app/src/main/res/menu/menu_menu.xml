@@ -5,19 +5,19 @@
     <item
         android:id="@+id/action_icon1"
         android:orderInCategory="1"
-        android:title="MenuActivity"
+        android:title="Home"
         android:icon="@mipmap/ic_home_txt"
         app:showAsAction="always"></item>
     <item
         android:id="@+id/action_icon2"
         android:orderInCategory="2"
-        android:title="Service"
+        android:title="Facilities"
         android:icon="@mipmap/ic_services_txt"
         app:showAsAction="always"></item>
     <item
         android:id="@+id/action_icon3"
         android:orderInCategory="3"
-        android:title="CentralWebsite"
+        android:title="Central Website"
         android:icon="@mipmap/ic_central_web_txt"
         app:showAsAction="always"></item>
     <item

@@ -189,12 +189,14 @@ public class GoogleMapActivity extends AppCompatActivity {
         );
 
         //Drawing point two
-        map.addMarker(
+        Marker marker = map.addMarker(
                 new MarkerOptions()
                         .position(pins.get(1))
                         .title(globalObject.getBuildingName())
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
         );
+
+        marker.showInfoWindow();
     }
 
     public void drawingRoute(){

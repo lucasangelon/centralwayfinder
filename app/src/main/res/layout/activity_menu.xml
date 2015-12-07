@@ -50,9 +50,11 @@
         android:paddingLeft="10dp">
 
         <EditText
-            android:layout_width="250dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/txtSearch" />
+            android:id="@+id/txtSearch"
+            android:hint="Enter room"
+            android:layout_weight=".75" />
 
         <ImageButton
             android:layout_width="wrap_content"
@@ -84,7 +86,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="20dp"
-            android:text="SERVICES" />
+            android:text="Facilities"/>
 
     </LinearLayout>
 
@@ -110,7 +112,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="20dp"
-            android:text="CENTRAL WEB" />
+            android:text="Central Web"/>
 
     </LinearLayout>
 
@@ -136,7 +138,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="20dp"
-            android:text="SETTINGS" />
+            android:text="Settings"/>
 
     </LinearLayout>
 

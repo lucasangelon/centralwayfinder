@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 
 import org.ksoap2.SoapEnvelope;
@@ -40,7 +41,7 @@ public class IndoorMapsActivity extends AppCompatActivity {
     private GlobalObject globalObject;
     private Useful useful;
     private RelativeLayout btnPainel;
-    private Button next, previous;
+    private ImageButton next, previous;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +49,7 @@ public class IndoorMapsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_indoor_maps);
 
         useful = new Useful(this);
-        
+
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
 
@@ -56,8 +57,8 @@ public class IndoorMapsActivity extends AppCompatActivity {
         images = new ArrayList<>();
 
         btnPainel =(RelativeLayout) findViewById(R.id.nextPanel);
-        next =(Button)findViewById(R.id.buttonNext);
-        previous =(Button)findViewById(R.id.buttonBack);
+        next =(ImageButton)findViewById(R.id.buttonNext);
+        previous =(ImageButton)findViewById(R.id.buttonBack);
         img = (MultiTouch) findViewById(R.id.mapMultiTouch);
         img.setMaxZoom(8f);
 
@@ -174,6 +175,7 @@ public class IndoorMapsActivity extends AppCompatActivity {
 
             img.setImageBitmap(images.get(0));
             currentMap = 0;
+            updateVisibilityButtons();
         }
 
         // Creates Bitmap from InputStream and returns it
@@ -222,27 +224,34 @@ public class IndoorMapsActivity extends AppCompatActivity {
         Back Button is clicked
      */
     public void imageBack(View v){
-
-        if(currentMap > 0){
-            currentMap--;
-            img.setImageBitmap(images.get(currentMap));
-            previous.setVisibility(View.VISIBLE);
-        }else{
-            previous.setVisibility(View.GONE);
-        }
+        currentMap--;
+        updateVisibilityButtons();
+        img.setImageBitmap(images.get(currentMap));
     }
 
     /*
         Back Button is clicked
      */
     public void imageFwd(View v){
+        currentMap++;
+        updateVisibilityButtons();
+        img.setImageBitmap(images.get(currentMap));
+    }
 
-        if(currentMap < images.size() -1){
-            currentMap++;
-            img.setImageBitmap(images.get(currentMap));
+    public void updateVisibilityButtons(){
+        //Checking which page is for able or disable previous and next buttons
+        if(currentMap == 0){
+            //First img - disappear previous button
+            previous.setVisibility(View.INVISIBLE);
             next.setVisibility(View.VISIBLE);
-        }else{
-            next.setVisibility(View.GONE);
+        }else if (currentMap == images.size()-1){
+            //Last img - disappear next button
+            next.setVisibility(View.INVISIBLE);
+            previous.setVisibility(View.VISIBLE);
+        }else {
+            //Any other img - show both button
+            previous.setVisibility(View.VISIBLE);
+            next.setVisibility(View.VISIBLE);
         }
     }
 

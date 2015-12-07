@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationManager;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import codefactory.centralwayfinderproject.models.Campus;
 
@@ -39,13 +40,16 @@ public class Useful extends Application {
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
     }
 
-    @SuppressWarnings("ResourceType")
     public Location getUserLocation() {
 
         this.locationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
         String provider = locationManager.NETWORK_PROVIDER;
-        Location location = locationManager.getLastKnownLocation(provider);
-
+        Location location = null;
+        try {
+            location = locationManager.getLastKnownLocation(provider);
+        }catch (SecurityException ex){
+            Log.e("SecurityException",ex.toString());
+        }
         return location;
     }
 
